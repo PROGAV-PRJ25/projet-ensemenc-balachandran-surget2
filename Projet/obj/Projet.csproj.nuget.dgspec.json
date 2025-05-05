@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/vanu.bala/Desktop/projet-ensemenc-balachandran-surget2/Projet/Projet.csproj": {}
+    "/Users/lou-ann/Desktop/ENSC/S6/Projet Tetelin 2/projet-ensemenc-balachandran-surget2/Projet/Projet.csproj": {}
   },
   "projects": {
-    "/Users/vanu.bala/Desktop/projet-ensemenc-balachandran-surget2/Projet/Projet.csproj": {
+    "/Users/lou-ann/Desktop/ENSC/S6/Projet Tetelin 2/projet-ensemenc-balachandran-surget2/Projet/Projet.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/vanu.bala/Desktop/projet-ensemenc-balachandran-surget2/Projet/Projet.csproj",
+        "projectUniqueName": "/Users/lou-ann/Desktop/ENSC/S6/Projet Tetelin 2/projet-ensemenc-balachandran-surget2/Projet/Projet.csproj",
         "projectName": "Projet",
-        "projectPath": "/Users/vanu.bala/Desktop/projet-ensemenc-balachandran-surget2/Projet/Projet.csproj",
-        "packagesPath": "/Users/vanu.bala/.nuget/packages/",
-        "outputPath": "/Users/vanu.bala/Desktop/projet-ensemenc-balachandran-surget2/Projet/obj/",
+        "projectPath": "/Users/lou-ann/Desktop/ENSC/S6/Projet Tetelin 2/projet-ensemenc-balachandran-surget2/Projet/Projet.csproj",
+        "packagesPath": "/Users/lou-ann/.nuget/packages/",
+        "outputPath": "/Users/lou-ann/Desktop/ENSC/S6/Projet Tetelin 2/projet-ensemenc-balachandran-surget2/Projet/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/vanu.bala/.nuget/NuGet/NuGet.Config"
+          "/Users/lou-ann/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
