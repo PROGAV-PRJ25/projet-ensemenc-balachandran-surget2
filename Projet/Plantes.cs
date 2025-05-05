@@ -14,6 +14,11 @@ public abstract class Plantes
     public int EsperanceDeVie { get; set; }
     public int ProductionParCycle { get; set; }
 
+    public int Age { get; set; } = 0; // Nombre de jours écoulés
+    public int NbProductionsEffectuees { get; set; } = 0; // facultatif
+    public bool EstMature => Age >= JoursPourMaturité;
+    public bool EstMorte => Age >= EsperanceDeVie;
+
     public static class SemisDispo
 {
     public static Plantes CreerPlante(string type)
@@ -36,9 +41,50 @@ public abstract class Plantes
         }
     }
 }
-
-
     public abstract void AfficherInfos();
+
+    public string Phase
+{
+    get
+    {
+        if (Age == 0) return "Graine";
+        if (Age < JoursPourMaturité / 2) return "Jeune pousse";
+        if (Age < JoursPourMaturité) return "En croissance";
+        if (EstMature && !EstMorte) return "Mature";
+        return "Morte";
+    }
+}
+
+public virtual void Grandir()
+{
+    Age++;
+    if (EstMature && Age % 7 == 0) // production toutes les semaines après maturité
+    {
+        Produire();
+    }
+}
+
+public virtual void Produire()
+{
+    NbProductionsEffectuees++;
+}
+
+public virtual string Croissance
+{
+    get
+    {
+        return Phase switch
+        {
+            "Graine" => "",
+            "Jeune pousse" => "",
+            "En croissance" => "",
+            "Mature" => "",
+            "Morte" => "",
+            _ => "?"
+        };
+    }
+}
+
 }
 
 public class Tomate : Plantes
@@ -59,6 +105,33 @@ public class Tomate : Plantes
         EsperanceDeVie = 120;
         ProductionParCycle = 3;
     }
+    public string Phase
+{
+    get
+    {
+        if (Age < 7) return "Graine";
+        if (Age > 7 && JoursPourMaturité > 2) return "Jeune pousse";
+        if (Age < JoursPourMaturité) return "En croissance";
+        if (EstMature && !EstMorte) return "Mature";
+        return "Morte";
+    }
+}
+
+    public override string Croissance
+{
+    get
+    {
+        return Phase switch
+        {
+            "Graine" => ".",
+            "Jeune pousse" => "🌱",    // pour Tomate
+            "En croissance" => "🎋",
+            "Mature" => "🍅",
+            "Morte" => "x",
+            _ => "?"
+        };
+    }
+}
 
     public override void AfficherInfos()
     {
