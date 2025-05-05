@@ -3,14 +3,13 @@ public class Jardin
 {
     public void TracerJardin(int rows, int cols)
     {
-        int LargeurGrille = 13; // Largeur d'une grille
-        int HauteurGrille = 7; // Hauteur d'une grille
+        int LargeurGrille = 11; // Largeur réelle d'une grille (chaîne "   |   |   ")
+        int HauteurGrille = 7;  // Non utilisé directement mais laissé pour cohérence
         int EspaceHorizontal = 4; // Espacement horizontal entre les grilles
-        int EspaceVertical = 2; // Espacement vertical entre les rangées de grilles
+        int EspaceVertical = 2;   // Espacement vertical entre les rangées de grilles
 
-        // Calcul des dimensions totales du rectangle
-        int Largeur = cols * LargeurGrille + (cols - 1) * EspaceHorizontal + 2; // Largeur totale ajustée
-        int Hauteur = rows * HauteurGrille + (rows - 1) * EspaceVertical + 4; // Hauteur totale
+        // Calcul des dimensions totales du rectangle (ajustement +8 pour bords)
+        int Largeur = cols * LargeurGrille + (cols - 1) * EspaceHorizontal + 8;
 
         // Dessiner le cadre supérieur
         Console.ForegroundColor = ConsoleColor.Cyan;
@@ -23,6 +22,7 @@ public class Jardin
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.Write("║"); // Bord gauche
                 Console.ResetColor();
+
                 for (int col = 0; col < cols; col++)
                 {
                     Console.Write("   |   |   ");
@@ -31,6 +31,7 @@ public class Jardin
                         Console.Write(new string(' ', EspaceHorizontal)); // Espacement horizontal
                     }
                 }
+
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("║"); // Bord droit
                 Console.ResetColor();
@@ -40,14 +41,16 @@ public class Jardin
                     Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.Write("║"); // Bord gauche
                     Console.ResetColor();
+
                     for (int col = 0; col < cols; col++)
                     {
                         Console.Write("---+---+---");
                         if (col < cols - 1)
                         {
-                            Console.Write(new string(' ', EspaceVertical)); // Espacement horizontal
+                            Console.Write(new string(' ', EspaceHorizontal)); // Espacement horizontal
                         }
                     }
+
                     Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.WriteLine("║"); // Bord droit
                     Console.ResetColor();
