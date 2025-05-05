@@ -1,2 +1,22 @@
-/obj
-/bin
+# Ignore les dossiers bin et obj (générés par .NET lors de la compilation)
+bin/
+obj/
+
+# Ignore les fichiers de configuration utilisateur de Visual Studio
+.vs/
+.vscode/
+.idea/
+
+# Ignore les fichiers de build spécifiques à la plateforme
+[Dd]ebug/
+[Dd]ebugPublic/
+[Dd]ist/
+
+# Ignore les fichiers de cache de NuGet
+.nuget/
+*.nupkg
+project.lock.json
+project.fragment.lock.json
+
+# Ignore les fichiers de log
+*.log
