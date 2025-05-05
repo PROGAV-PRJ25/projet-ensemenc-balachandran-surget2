@@ -28,10 +28,9 @@ public class Plante
         if (meteo.Condition == "Ensoleillé") Croissance += 10;
         else if (meteo.Condition == "Nuageux") Croissance += 5;
         else if (meteo.Condition == "Pluie") Croissance += 7;
-        else if (meteo.Condition == "Vent fort") Croissance += 3;
 
         // Vent peut abîmer la plante
-        if (meteo.Condition == "Vent fort" && new Random().NextDouble() < 0.3)
+        if (meteo.Vent > 30 && new Random().NextDouble() < 0.3)
         {
             EstAbimee = true;
         }
