@@ -15,7 +15,6 @@ public class Objet
     }
 }
 
-
 public class Inventaire
 {
     public List<Objet> Objets { get; set; } = new List<Objet>();
@@ -56,5 +55,14 @@ public class Inventaire
         if (Objets.Count == 0)
             Console.WriteLine(" - (vide)");
     }
-}
 
+    public bool SemerGraine(string nom)
+    {
+        if (Objets.Any(o => o.Nom == nom && o.Quantite > 0))
+        {
+            UtiliserObjet(nom);
+            return true;
+        }
+        return false;
+    }
+}
