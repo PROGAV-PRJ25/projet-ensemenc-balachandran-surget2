@@ -1,4 +1,7 @@
 ﻿Jardin Jardin1 = new Jardin();
+Inventaire inventaire = new Inventaire();
+inventaire.AjouterObjet("Arrosoir", 1);
+inventaire.AjouterObjet("Graine de tomate", 5);
 
 for (int jour = 1; jour <= 7; jour++)
 {
@@ -17,6 +20,8 @@ for (int jour = 1; jour <= 7; jour++)
 
     Console.WriteLine();
     Jardin1.TracerJardin(2, 3);
+    Console.WriteLine();
+    inventaire.Afficher();
 
     Console.WriteLine();
     Console.ForegroundColor = ConsoleColor.Yellow;
