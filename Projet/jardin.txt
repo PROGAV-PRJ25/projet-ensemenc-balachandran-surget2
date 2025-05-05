@@ -12,3 +12,36 @@ Tomate . 🌱🎋🍅
 Hibiscus .  🌱🌿🌺
 Aubergine . 🌱🪴🍆
 Thé : . 🌱🌿🍃
+
+
+--> Classe Plante (la partie en fonction de la météo)
+
+public class Plante
+{
+    public string Nom { get; set; }
+    public int Croissance { get; set; } = 0; // 0 à 100
+    public bool EstAbimee { get; set; } = false;
+
+    public void AppliquerMeteo(Meteo meteo)
+    {
+        // Croissance selon la météo
+        if (meteo.Condition == "Ensoleillé") Croissance += 10;
+        else if (meteo.Condition == "Nuageux") Croissance += 5;
+        else if (meteo.Condition == "Pluie") Croissance += 7;
+        else if (meteo.Condition == "Vent fort") Croissance += 3;
+
+        // Vent peut abîmer la plante
+        if (meteo.Condition == "Vent fort" && new Random().NextDouble() < 0.3)
+        {
+            EstAbimee = true;
+        }
+
+        // Limite croissance max
+        if (Croissance > 100) Croissance = 100;
+    }
+
+    public void AfficherEtat()
+    {
+        Console.WriteLine($"{Nom,-10} | Croissance : {Croissance}% | {(EstAbimee ? "🌪️ Abîmée" : "✅ OK")}");
+    }
+}
