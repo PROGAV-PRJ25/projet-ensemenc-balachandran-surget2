@@ -1,91 +1,100 @@
-// CONSTRUCTION POTAGER
-public class Jardin
+public class Case
 {
-    public void TracerJardin(int rows, int cols)
+    public Plantes Plante { get; set; }
+
+    public string Afficher()
     {
-        int LargeurGrille = 11; // Largeur réelle d'une grille (chaîne "   |   |   ")
-        int HauteurGrille = 7;  // Non utilisé directement mais laissé pour cohérence
-        int EspaceHorizontal = 4; // Espacement horizontal entre les grilles
-        int EspaceVertical = 2;   // Espacement vertical entre les rangées de grilles
-
-        // Calcul des dimensions totales du rectangle (ajustement +8 pour bords)
-        int Largeur = cols * LargeurGrille + (cols - 1) * EspaceHorizontal + 8;
-
-        // Dessiner le cadre supérieur
-        Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.WriteLine("╔" + new string('═', Largeur - 8) + "╗");
-
-        for (int row = 0; row < rows; row++)
-        {
-            for (int gridRow = 0; gridRow < 3; gridRow++) // Chaque grille a 3 lignes
-            {
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.Write("║"); // Bord gauche
-                Console.ResetColor();
-
-                for (int col = 0; col < cols; col++)
-                {
-                    Console.Write("   |   |   ");
-                    if (col < cols - 1)
-                    {
-                        Console.Write(new string(' ', EspaceHorizontal)); // Espacement horizontal
-                    }
-                }
-
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine("║"); // Bord droit
-                Console.ResetColor();
-
-                if (gridRow < 2) // Lignes séparant les cases dans une grille
-                {
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.Write("║"); // Bord gauche
-                    Console.ResetColor();
-
-                    for (int col = 0; col < cols; col++)
-                    {
-                        Console.Write("---+---+---");
-                        if (col < cols - 1)
-                        {
-                            Console.Write(new string(' ', EspaceHorizontal)); // Espacement horizontal
-                        }
-                    }
-
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.WriteLine("║"); // Bord droit
-                    Console.ResetColor();
-                }
-            }
-
-            if (row < rows - 1) // Espacement entre les rangées de grilles
-            {
-                for (int i = 0; i < EspaceVertical; i++)
-                {
-                    Console.WriteLine(); // Ligne vide pour espacer
-                }
-            }
-        }
-
-        // Dessiner le cadre inférieur
-        Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.WriteLine("╚" + new string('═', Largeur - 8) + "╝");
-        Console.ResetColor();
+        return Plante == null ? "□" : Plante.Croissance;
     }
 }
 
-// TERRAIN
-
-public abstract class Terrain {
-
-}
-public class TerrainSableux : Terrain{
-
-}
-public class TerrainArgileux : Terrain{
-
-}
-public class TerrainTerreux : Terrain
+public class Terrain
 {
+    public Case[,] Cases { get; }
 
+    public Terrain()
+    {
+        Cases = new Case[3, 3];
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+                Cases[i, j] = new Case();
+    }
+}
+
+public class Jardin
+{
+    public Terrain[,] Terrains { get; }
+
+    public Jardin()
+    {
+        Terrains = new Terrain[2, 3];
+        for (int i = 0; i < 2; i++)
+            for (int j = 0; j < 3; j++)
+                Terrains[i, j] = new Terrain();
+    }
+}
+
+public class JardinCurseur
+{
+    private Jardin jardin;
+    private int terrainX;
+    private int terrainY;
+    private int caseX;
+    private int caseY;
+
+    public JardinCurseur(Jardin jardin)
+    {
+        this.jardin = jardin;
+        terrainX = 0;
+        terrainY = 0;
+        caseX = 0;
+        caseY = 0;
+    }
+
+    public void Deplacer(string direction)
+    {
+        switch (direction.ToLower())
+        {
+            case "z": caseY = (caseY + 2) % 3; break; // haut
+            case "s": caseY = (caseY + 1) % 3; break; // bas
+            case "q": caseX = (caseX + 2) % 3; break; // gauche
+            case "d": caseX = (caseX + 1) % 3; break; // droite
+            case "haut": terrainX = (terrainX + 1) % 2; break;
+            case "bas": terrainX = (terrainX + 1) % 2; break;
+            case "gauche": terrainY = (terrainY + 2) % 3; break;
+            case "droite": terrainY = (terrainY + 1) % 3; break;
+        }
+    }
+
+    public void Afficher()
+    {
+        for (int tx = 0; tx < 2; tx++)
+        {
+            for (int row = 0; row < 3; row++)
+            {
+                for (int ty = 0; ty < 3; ty++)
+                {
+                    for (int col = 0; col < 3; col++)
+                    {
+                        if (tx == terrainX && ty == terrainY && row == caseY && col == caseX)
+                            Console.Write("▣ "); // Curseur
+                        else
+                        {
+                            var plante = jardin.Terrains[tx, ty].Cases[row, col].Plante;
+                            Console.Write(plante == null ? "□ " : plante.Croissance + " ");
+                        }
+                    }
+                    Console.Write("   ");
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine();
+        }
+    }
+
+    public void Planter(Plantes plante)
+    {
+        jardin.Terrains[terrainX, terrainY].Cases[caseY, caseX].Plante = plante;
+    }
 }
 

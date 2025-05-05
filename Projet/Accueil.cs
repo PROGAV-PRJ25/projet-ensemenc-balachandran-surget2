@@ -84,7 +84,28 @@ public class Accueil
             meteo.Afficher();
 
             Console.WriteLine();
-            Jardin1.TracerJardin(2, 3);
+            Jardin jardin = new Jardin();
+            JardinCurseur curseur = new JardinCurseur(jardin);
+
+            while (true)
+            {
+                Console.Clear();
+                curseur.Afficher();
+                Console.WriteLine("Déplacez avec ZQSD. Tapez P pour planter, X pour quitter.");
+                string input = Console.ReadLine()!.ToLower();
+
+                if (input == "x") break;
+                if (input == "p")
+                {
+                    // Exemple : plante une tomate
+                    curseur.Planter(new Tomate());
+                }
+                else
+                {
+                    curseur.Deplacer(input);
+                }
+            }
+
 
             // Afficher l'inventaire
             Console.WriteLine();
