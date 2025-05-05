@@ -51,18 +51,24 @@ public class JardinCurseur
         caseY = 0;
     }
 
-    public void Deplacer(string direction)
+    public void Deplacer()
     {
-        switch (direction.ToLower())
+        while (true)
         {
-            case "z": caseY = (caseY + 2) % 3; break; // haut
-            case "s": caseY = (caseY + 1) % 3; break; // bas
-            case "q": caseX = (caseX + 2) % 3; break; // gauche
-            case "d": caseX = (caseX + 1) % 3; break; // droite
-            case "haut": terrainX = (terrainX + 1) % 2; break;
-            case "bas": terrainX = (terrainX + 1) % 2; break;
-            case "gauche": terrainY = (terrainY + 2) % 3; break;
-            case "droite": terrainY = (terrainY + 1) % 3; break;
+            Console.Clear();
+            Afficher();
+            ConsoleKey key = Console.ReadKey(true).Key;
+            switch (key)
+            {
+                case ConsoleKey.UpArrow: caseY = (caseY + 2) % 3; break; // haut
+                case ConsoleKey.DownArrow: caseY = (caseY + 1) % 3; break; // bas
+                case ConsoleKey.LeftArrow: caseX = (caseX + 2) % 3; break; // gauche
+                case ConsoleKey.RightArrow: caseX = (caseX + 1) % 3; break; // droite
+                case ConsoleKey.A: terrainX = (terrainX + 1) % 2; break;
+                case ConsoleKey.Z: terrainX = (terrainX + 1) % 2; break;
+                case ConsoleKey.E: terrainY = (terrainY + 2) % 3; break;
+                case ConsoleKey.R: terrainY = (terrainY + 1) % 3; break;
+            }
         }
     }
 

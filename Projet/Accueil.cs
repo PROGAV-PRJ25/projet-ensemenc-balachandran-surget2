@@ -102,7 +102,7 @@ public class Accueil
                 }
                 else
                 {
-                    curseur.Deplacer(input);
+                    curseur.Deplacer();
                 }
             }
 
