@@ -1,2 +1,2 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿Jardin Jardin1 = new Jardin();
+Jardin1.TracerJardin(2, 3); 

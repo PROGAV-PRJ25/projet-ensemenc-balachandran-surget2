@@ -1,0 +1,14 @@
+Plantes à mettre dans le potager : 
+Plante	    Germination (jours)	Jeune Plant (jours)	Maturité / Récolte (jours)	🌿 Croissance Totale
+Mangue	            14	                90	                730	                    834 jours
+Tomate	            07	                14	                035	                    056 jours
+Aubergine	        10	                20	                050	                    080 jours
+Thé	                40	                60	                265	                    365 jours
+Hibiscus	        12	                30	                45	                    87 jours
+
+
+Mangue . 🌱🌳🥭
+Tomate . 🌱🎋🍅
+Hibiscus .  🌱🌿🌺
+Aubergine . 🌱🪴🍆
+Thé : . 🌱🌿🍃
