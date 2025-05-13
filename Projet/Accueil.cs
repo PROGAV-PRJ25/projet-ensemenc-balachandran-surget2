@@ -105,9 +105,45 @@ public class Accueil
                         Console.WriteLine("Tu as choisi d'arroser !");
                         break;
                     case ConsoleKey.D2:
-                        curseur.Deplacer();
-                        Console.WriteLine("Tu as choisi de semer !");
+                        Console.WriteLine("\nQuelles graines voulez-vous semer ?");
+                        // Filtrer les graines disponibles dans l'inventaire
+                        var graines = inventaire.Objets.Where(o => o.Nom.Contains("Graine")).ToList();
+
+                        if (graines.Count == 0)
+                        {
+                            Console.WriteLine("Tu n'as pas de graines à semer !");
+                            break;
+                        }
+
+                        // Afficher les options disponibles
+                        for (int i = 0; i < graines.Count; i++)
+                        {
+                            Console.WriteLine($"{i + 1}. {graines[i].Nom} x{graines[i].Quantite}");
+                        }
+                        Console.Write("\nChoix (tapez le numéro correspondant) : ");
+
+                        // Lire l'entrée utilisateur et convertir en index
+                        if (int.TryParse(Console.ReadLine(), out int choixGraine) && choixGraine > 0 && choixGraine <= graines.Count)
+                        {
+                            var graineChoisie = graines[choixGraine - 1];
+                            curseur.Deplacer();
+
+                            if (inventaire.SemerGraine(graineChoisie.Nom))
+                            {
+                                Console.WriteLine($"Tu as semé une {graineChoisie.Nom} ! 🌱");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Erreur : Impossible de semer cette graine.");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Choix invalide.");
+                        }
                         break;
+
+                        
                     case ConsoleKey.D3:
                         curseur.Deplacer();
                         Console.WriteLine("Tu as choisi de récolter !");
