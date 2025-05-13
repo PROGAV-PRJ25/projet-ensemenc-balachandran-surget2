@@ -134,7 +134,17 @@ public class JardinCurseur
                         else
                         {
                             var plante = jardin.Terrains[tx, ty].Cases[row, col].Plante;
-                            Console.Write(plante == null ? "□ " : plante.Croissance + " ");
+                            if (plante == null)
+                            {
+                                Console.Write("□ ");
+                            }
+                            else
+                            {
+                                Console.ForegroundColor = plante.Couleur;
+                                Console.Write(plante.Croissance + " ");
+                                Console.ResetColor();
+                            }
+
                         }
                     }
                     Console.Write("   ");
