@@ -57,17 +57,58 @@ public class JardinCurseur
         {
             Console.Clear();
             Afficher();
-            ConsoleKey key = Console.ReadKey(true).Key;
+            var keyInfo = Console.ReadKey(true);
+            var key = keyInfo.Key;
+
             switch (key)
             {
-                case ConsoleKey.UpArrow: caseY = (caseY + 2) % 3; break; // haut
-                case ConsoleKey.DownArrow: caseY = (caseY + 1) % 3; break; // bas
-                case ConsoleKey.LeftArrow: caseX = (caseX + 2) % 3; break; // gauche
-                case ConsoleKey.RightArrow: caseX = (caseX + 1) % 3; break; // droite
-                case ConsoleKey.A: terrainX = (terrainX + 1) % 2; break;
-                case ConsoleKey.Z: terrainX = (terrainX + 1) % 2; break;
-                case ConsoleKey.E: terrainY = (terrainY + 2) % 3; break;
-                case ConsoleKey.R: terrainY = (terrainY + 1) % 3; break;
+                case ConsoleKey.UpArrow:
+                    if (caseY == 0)
+                    {
+                        terrainX = (terrainX + 1) % 2; // terrain précédent verticalement
+                        caseY = 2;
+                    }
+                    else
+                    {
+                        caseY--;
+                    }
+                    break;
+
+                case ConsoleKey.DownArrow:
+                    if (caseY == 2)
+                    {
+                        terrainX = (terrainX + 1) % 2; // terrain suivant verticalement
+                        caseY = 0;
+                    }
+                    else
+                    {
+                        caseY++;
+                    }
+                    break;
+
+                case ConsoleKey.LeftArrow:
+                    if (caseX == 0)
+                    {
+                        terrainY = (terrainY + 2) % 3; // terrain précédent horizontalement
+                        caseX = 2;
+                    }
+                    else
+                    {
+                        caseX--;
+                    }
+                    break;
+
+                case ConsoleKey.RightArrow:
+                    if (caseX == 2)
+                    {
+                        terrainY = (terrainY + 1) % 3; // terrain suivant horizontalement
+                        caseX = 0;
+                    }
+                    else
+                    {
+                        caseX++;
+                    }
+                    break;
             }
         }
     }
@@ -97,6 +138,8 @@ public class JardinCurseur
             Console.WriteLine();
         }
     }
+
+
 
     public void Planter(Plantes plante)
     {
