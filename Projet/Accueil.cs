@@ -101,7 +101,7 @@ public class Accueil
                 switch (choix)
                 {
                     case ConsoleKey.D1:
-                        curseur.Deplacer(); 
+                        curseur.Deplacer();
                         Console.WriteLine("Tu as choisi d'arroser !");
                         break;
                     case ConsoleKey.D2:
@@ -122,6 +122,7 @@ public class Accueil
                         break;
                 }
 
+                finTour = true;
                 Console.WriteLine("\nAppuie sur une touche pour continuer...");
                 Console.ReadKey();
             }
