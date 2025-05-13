@@ -36,11 +36,11 @@ public class Jardin
 
 public class JardinCurseur
 {
-    private Jardin jardin;
-    private int terrainX;
-    private int terrainY;
-    private int caseX;
-    private int caseY;
+    public Jardin jardin;
+    public int terrainX;
+    public int terrainY;
+    public int caseX;
+    public int caseY;
 
     public JardinCurseur(Jardin jardin)
     {
@@ -53,9 +53,11 @@ public class JardinCurseur
 
     public void Deplacer()
     {
-        while (true)
+        bool enDeplacement = true; // Variable pour quitter la boucle
+        while (enDeplacement)
         {
             Console.Clear();
+            Console.WriteLine("Choisissez une case avec les flèches et appuyez sur Entrée.");
             Afficher();
             var keyInfo = Console.ReadKey(true);
             var key = keyInfo.Key;
@@ -109,6 +111,10 @@ public class JardinCurseur
                         caseX++;
                     }
                     break;
+
+                case ConsoleKey.Enter: // Quitter le mode déplacement
+                enDeplacement = false;
+                break;
             }
         }
     }

@@ -52,17 +52,11 @@ public class Accueil
         Console.Clear();
         Console.WriteLine("Vous avez choisi de jouer !");
 
-        Jardin Jardin1 = new Jardin();
+        Jardin jardin = new Jardin();
+        JardinCurseur curseur = new JardinCurseur(jardin);
         Meteo meteo = new Meteo();
         Inventaire inventaire = new Inventaire();
-        /*
-        List<Plante> potager = new List<Plante>
-            {
-                new Plante { Nom = "Tomate" },
-                new Plante { Nom = "Carotte" },
-                new Plante { Nom = "Salade" }
-            };
-        */
+
 
         // Ajouter des objets à l'inventaire
         inventaire.AjouterObjet("Arrosoir", 1);
@@ -70,125 +64,70 @@ public class Accueil
         inventaire.AjouterObjet("Graine de carotte", 3);
 
 
-        for (int jour = 1; jour <= 7; jour++)
+        for (int semaine = 1; semaine <= 7; semaine++)
         {
-            Console.Clear();
-            Console.WriteLine($"🌿 Jour {jour} 🌿");
 
             // Génère météo du jour
-            meteo.Temperature = new Random().Next(25, 35);
-            meteo.Humidite = new Random().Next(60, 90);
-            meteo.Vent = new Random().Next(5, 20);
-            meteo.Condition = new[] { "Ensoleillé", "Nuageux", "Pluie" }[new Random().Next(0, 3)];
+            Random rnd = new Random(); // Une seule instance utilisée
+            meteo.Temperature = rnd.Next(25, 35);
+            meteo.Humidite = rnd.Next(60, 90);
+            meteo.Vent = rnd.Next(5, 20);
+            meteo.Condition = new[] { "Ensoleillé", "Nuageux", "Pluie" }[rnd.Next(0, 3)];
 
-            meteo.Afficher();
 
-            Console.WriteLine();
-            Jardin jardin = new Jardin();
-            JardinCurseur curseur = new JardinCurseur(jardin);
 
-            while (true)
+            bool finTour = false;
+            while (!finTour)
             {
                 Console.Clear();
+                Console.WriteLine($"🌿 Semaine {semaine} 🌿");
+                meteo.Afficher();
+                Console.WriteLine();
                 curseur.Afficher();
-                Console.WriteLine("Déplacez avec ZQSD. Tapez P pour planter, X pour quitter.");
-                string input = Console.ReadLine()!.ToLower();
+                Console.WriteLine();
+                inventaire.Afficher();
 
-                if (input == "x") break;
-                if (input == "p")
+                Console.WriteLine("\nQue voulez-vous faire ?");
+                Console.WriteLine("1. Arroser les plantes");
+                Console.WriteLine("2. Semer une graine");
+                Console.WriteLine("3. Récolter des plantes");
+                Console.WriteLine("4. Passer à la semaine suivante");
+                Console.Write("Choix : ");
+
+
+                ConsoleKey choix = Console.ReadKey().Key;
+                Console.WriteLine();
+
+                switch (choix)
                 {
-                    // Exemple : plante une tomate
-                    curseur.Planter(new Tomate());
+                    case ConsoleKey.D1:
+                        curseur.Deplacer(); 
+                        Console.WriteLine("Tu as choisi d'arroser !");
+                        break;
+                    case ConsoleKey.D2:
+                        curseur.Deplacer();
+                        Console.WriteLine("Tu as choisi de semer !");
+                        break;
+                    case ConsoleKey.D3:
+                        curseur.Deplacer();
+                        Console.WriteLine("Tu as choisi de récolter !");
+                        break;
+                    case ConsoleKey.D4:
+                        Console.WriteLine("Passage à la semaine suivante...");
+                        Thread.Sleep(1000);
+                        finTour = true; // Permet de sortir de la boucle et avancer la semaine
+                        break;
+                    default:
+                        Console.WriteLine("Choix invalide.");
+                        break;
                 }
-                else
-                {
-                    curseur.Deplacer();
-                }
+
+                Console.WriteLine("\nAppuie sur une touche pour continuer...");
+                Console.ReadKey();
             }
-
-
-            // Afficher l'inventaire
-            Console.WriteLine();
-            inventaire.Afficher();
-
-            Console.WriteLine();
-            // Menu d'actions
-            Console.WriteLine("\nQue voulez-vous faire ?");
-            Console.WriteLine("1. Arroser les plantes");
-            Console.WriteLine("2. Semer une graine");
-            Console.WriteLine("3. Récolter des plantes");
-            Console.WriteLine("4. Passer au jour suivant");
-            Console.Write("Choix : ");
-
-            var choix = Console.ReadKey().Key;
-            Console.WriteLine();
-
-            switch (choix)
-            {
-                case ConsoleKey.D1: // Arroser
-                    if (inventaire.UtiliserObjet("Arrosoir"))
-                    {
-                        Console.WriteLine("Tu as arrosé les plantes. 🌧️ Croissance +5%");
-                        //foreach (var plante in potager)
-                        {
-                            //  plante.Croissance += 5;
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("Tu n’as pas d’arrosoir !");
-                    }
-                    break;
-
-                case ConsoleKey.D2: // Semer
-                    Console.WriteLine("Quelles graines voulez-vous semer ?");
-                    Console.WriteLine("1. Graine de tomate");
-                    Console.WriteLine("2. Graine de carotte");
-                    Console.Write("Choix : ");
-                    var semerChoix = Console.ReadKey().Key;
-                    Console.WriteLine();
-
-                    if (semerChoix == ConsoleKey.D1 && inventaire.SemerGraine("Graine de tomate"))
-                    {
-                        Console.WriteLine("Tu as semé une graine de tomate.");
-                    }
-                    else if (semerChoix == ConsoleKey.D2 && inventaire.SemerGraine("Graine de carotte"))
-                    {
-                        Console.WriteLine("Tu as semé une graine de carotte.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Tu n'as pas cette graine dans ton inventaire.");
-                    }
-                    break;
-
-                case ConsoleKey.D3: // Récolter
-                    Console.WriteLine("Récolter ?");
-
-                    // foreach (var plante in potager)
-                    {
-                        //if (plante.Croissance == 100)
-                        {
-                            //Console.WriteLine($"{plante.Nom} est prête à être récoltée !");
-                        }
-                    }
-                    break;
-
-                case ConsoleKey.D4: // Passer le jour
-                    Console.WriteLine("Passage au jour suivant...");
-                    break;
-
-                default:
-                    Console.WriteLine("Choix invalide.");
-                    break;
-            }
-
-            Console.WriteLine("\nAppuie sur une touche pour continuer...");
-            Console.ReadKey();
         }
-
-
     }
+
 
     // Fonction pour lire les règles du jeu
     public void LireRegles()
