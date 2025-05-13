@@ -1,28 +1,44 @@
 
+public class TextHelper
+{
+    public static string CenterText(string text)
+    {
+        int largeurConsole = Console.WindowWidth;
+        int positionX = (largeurConsole - text.Length) / 2;
+        return new string(' ', Math.Max(positionX, 0))+ text.Trim();
+    }
+}
+
+
+
 public class Accueil
 {
     public void AfficherPageAccueil()
     {
         // Affichage du dessin ASCII pour la page d'accueil
+
         Console.Clear();
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine(@"  _____ _           _             _             ");
-        Console.WriteLine(@" |_   _| |__   __ _| |_ ___ _ __ (_) __ _ _ __  ");
-        Console.WriteLine(@"   | | | '_ \ / _` | __/ _ \ '_ \| |/ _` | '_ \ ");
-        Console.WriteLine(@"   | | | | | | (_| | ||  __/ | | | | (_| | | | |");
-        Console.WriteLine(@"   |_| |_| |_|\__,_|\__\___|_| |_|_|\__,_|_| |_|");
+        Console.WriteLine(TextHelper.CenterText(@",_____ _   _ ____  _____ __  __ _____ _   _  ____ "));
+        Console.WriteLine(TextHelper.CenterText(@"| ____| \ | / ___|| ____|  \/  | ____| \ | |/ ___|"));
+        Console.WriteLine(TextHelper.CenterText(@"|  _| |  \| \___ \|  _| | |\/| |  _| |  \| | |    "));
+        Console.WriteLine(TextHelper.CenterText(@"| |___| |\  |___) | |___| |  | | |___| |\  | |___ "));
+        Console.WriteLine(TextHelper.CenterText(@"|_____|_| \_|____/|_____|_|  |_|_____|_| \_|\____|"));
+
         Console.WriteLine();
-        Console.WriteLine("Bienvenue dans le simulateur de jardinage !");
+        Console.WriteLine(TextHelper.CenterText("Bienvenue dans le simulateur de jardinage !"));
         Console.ResetColor();
+        Console.WriteLine();
 
         // Afficher le menu principal
-        Console.WriteLine("\nQue souhaitez-vous faire ?");
-        Console.WriteLine("1. Jouer");
-        Console.WriteLine("2. Lire les règles");
-        Console.WriteLine("3. Quitter");
+        Console.WriteLine(TextHelper.CenterText("\nQue souhaitez-vous faire ?"));
+        Console.WriteLine(TextHelper.CenterText("1. Jouer"));
+        Console.WriteLine(TextHelper.CenterText("2. Lire les règles"));
+        Console.WriteLine(TextHelper.CenterText("3. Quitter"));
+        Console.WriteLine();
 
         // Lecture de la sélection de l'utilisateur
-        Console.Write("Choisissez une option (1, 2, ou 3) : ");
+        Console.Write(TextHelper.CenterText("Choisissez une option (1, 2, ou 3) : "));
         var choix = Console.ReadKey().Key;
 
         Console.WriteLine();
@@ -143,7 +159,7 @@ public class Accueil
                         }
                         break;
 
-                        
+
                     case ConsoleKey.D3:
                         curseur.Deplacer();
                         Console.WriteLine("Tu as choisi de récolter !");
