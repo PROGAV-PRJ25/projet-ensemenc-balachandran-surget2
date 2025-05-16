@@ -64,7 +64,7 @@ public class Accueil
         inventaire.AjouterObjet("Graine de carotte", 3);
 
 
-        for (int semaine = 1; semaine <= 7; semaine++)
+        for (int semaine = 1; semaine <= 10; semaine++)
         {
 
             // Génère météo du jour
@@ -123,14 +123,34 @@ public class Accueil
                         Console.Write("\nChoix (tapez le numéro correspondant) : ");
 
                         // Lire l'entrée utilisateur et convertir en index
-                        if (int.TryParse(Console.ReadLine(), out int choixGraine) && choixGraine > 0 && choixGraine <= graines.Count)
+                        if (int.TryParse(Console.ReadLine()!, out int choixGraine) && choixGraine > 0 && choixGraine <= graines.Count)
                         {
                             var graineChoisie = graines[choixGraine - 1];
                             curseur.Deplacer();
 
+                            // vérifier si case dispo
+                            var caseActuelle = curseur.ObtenirCase();
+                            if (caseActuelle.Plante != null)
+                            {
+                                Console.WriteLine("Il y a déjà une plante ici !");
+                                break;
+                            }
+
                             if (inventaire.SemerGraine(graineChoisie.Nom))
                             {
-                                Console.WriteLine($"Tu as semé une {graineChoisie.Nom} ! 🌱");
+                                // Créer la plante correspondante
+                                Plantes plante = graineChoisie.Nom switch
+                                {
+                                    "Graine de tomate" => new Tomate(),
+                                    "aubergine" => new Aubergine(),
+                                    "mangue" => new Mangue(),
+                                    "hibiscus" => new Hibiscus(),
+                                    "thé" => new The(),
+                                    _ => throw new InvalidOperationException("Type de graine non reconnu.")
+                                };
+
+                                curseur.Planter(plante);
+                                Console.WriteLine($"Tu as semé une {graineChoisie.Nom} 🌱 !");
                             }
                             else
                             {
@@ -151,6 +171,7 @@ public class Accueil
                     case ConsoleKey.D4:
                         Console.WriteLine("Passage à la semaine suivante...");
                         Thread.Sleep(1000);
+                        jardin.ToutPousser(7);
                         finTour = true; // Permet de sortir de la boucle et avancer la semaine
                         break;
                     default:

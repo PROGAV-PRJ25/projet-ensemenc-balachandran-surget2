@@ -19,6 +19,11 @@ public abstract class Plantes
     public string Phase { get; set; } = "Graine";
     public int JoursDepuisSemis { get; set; } = 0;
 
+    public Plantes()
+{
+    JoursDepuisSemis = 0;
+    Phase = "Graine";
+}
     public virtual string Croissance
     {
         get

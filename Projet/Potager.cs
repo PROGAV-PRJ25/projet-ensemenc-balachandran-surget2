@@ -32,6 +32,21 @@ public class Jardin
             for (int j = 0; j < 3; j++)
                 Terrains[i, j] = new Terrain();
     }
+
+    public void ToutPousser(int nbJours = 1)
+    {
+        for (int jour = 0; jour < nbJours; jour++)
+        {
+            foreach (var terrain in Terrains)
+            {
+                foreach (var c in terrain.Cases)
+                {
+                    c.Plante?.Grandir();
+                }
+            }
+        }
+    }
+
 }
 
 public class JardinCurseur
@@ -119,47 +134,52 @@ public class JardinCurseur
         }
     }
 
-    public void Afficher()
+public void Afficher()
+{
+    for (int tx = 0; tx < 2; tx++)
     {
-        for (int tx = 0; tx < 2; tx++)
+        for (int row = 0; row < 3; row++)
         {
-            for (int row = 0; row < 3; row++)
+            for (int ty = 0; ty < 3; ty++)
             {
-                for (int ty = 0; ty < 3; ty++)
+                for (int col = 0; col < 3; col++)
                 {
-                    for (int col = 0; col < 3; col++)
-                    {
-                        if (tx == terrainX && ty == terrainY && row == caseY && col == caseX)
-                            Console.Write("▣ "); // Curseur
-                        else
-                        {
-                            var plante = jardin.Terrains[tx, ty].Cases[row, col].Plante;
-                            if (plante == null)
-                            {
-                                Console.Write("□ ");
-                            }
-                            else
-                            {
-                                Console.ForegroundColor = plante.Couleur;
-                                Console.Write(plante.Croissance + " ");
-                                Console.ResetColor();
-                            }
+                    bool estCurseur = (tx == terrainX && ty == terrainY && row == caseY && col == caseX);
+                    var caseActuelle = jardin.Terrains[tx, ty].Cases[row, col];
+                    var plante = caseActuelle.Plante;
 
-                        }
+                    string symbole = plante == null ? "□" : plante.Croissance;
+
+                    if (estCurseur)
+                    {
+                        Console.BackgroundColor = ConsoleColor.DarkGray;
                     }
-                    Console.Write("   ");
+
+                    if (plante != null)
+                        Console.ForegroundColor = plante.Couleur;
+
+                    Console.Write($" {symbole} ");
+
+                    Console.ResetColor();
                 }
-                Console.WriteLine();
+                Console.Write("   ");
             }
             Console.WriteLine();
         }
+        Console.WriteLine();
     }
+}
 
 
+
+    public Case ObtenirCase()
+    {
+        return jardin.Terrains[terrainX, terrainY].Cases[caseY, caseX];
+    }
 
     public void Planter(Plantes plante)
     {
-        jardin.Terrains[terrainX, terrainY].Cases[caseY, caseX].Plante = plante;
+        ObtenirCase().Plante = plante;
     }
 }
 
