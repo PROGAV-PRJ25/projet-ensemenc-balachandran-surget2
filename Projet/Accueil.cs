@@ -76,8 +76,11 @@ public class Accueil
 
         // Ajouter des objets à l'inventaire
         inventaire.AjouterObjet("Arrosoir", 1);
-        inventaire.AjouterObjet("Graine de tomate", 5);
-        inventaire.AjouterObjet("Graine de carotte", 3);
+        inventaire.AjouterObjet("graine de tomate", 5);
+        inventaire.AjouterObjet("graine de aubergine", 3);
+        inventaire.AjouterObjet("graine de mangue", 3);
+        inventaire.AjouterObjet("graine de thé", 3);
+        inventaire.AjouterObjet("graine de hibiscus", 3);
 
 
         for (int semaine = 1; semaine <= 15; semaine++)
@@ -123,7 +126,7 @@ public class Accueil
                     case ConsoleKey.D2:
                         Console.WriteLine("\nQuelles graines voulez-vous semer ?");
                         // Filtrer les graines disponibles dans l'inventaire
-                        var graines = inventaire.Objets.Where(o => o.Nom.Contains("Graine")).ToList();
+                        var graines = inventaire.Objets.Where(o => o.Nom.Contains("graine")).ToList();
 
                         if (graines.Count == 0)
                         {
@@ -157,11 +160,11 @@ public class Accueil
                                 // Créer la plante correspondante
                                 Plantes plante = graineChoisie.Nom switch
                                 {
-                                    "Graine de tomate" => new Tomate(),
-                                    "aubergine" => new Aubergine(),
-                                    "mangue" => new Mangue(),
-                                    "hibiscus" => new Hibiscus(),
-                                    "thé" => new The(),
+                                    "graine de tomate" => new Tomate(),
+                                    "graine de aubergine" => new Aubergine(),
+                                    "graine de mangue" => new Mangue(),
+                                    "graine de hibiscus" => new Hibiscus(),
+                                    "graine de thé" => new The(),
                                     _ => throw new InvalidOperationException("Type de graine non reconnu.")
                                 };
 
