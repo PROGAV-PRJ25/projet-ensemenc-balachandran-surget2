@@ -221,7 +221,34 @@ public class JardinCurseur
 
     public void Planter(Plantes plante)
     {
-        ObtenirCase().Plante = plante;
+        if (!PeutPlanter(plante))
+        {
+            Console.WriteLine("Espace insuffisant pour planter ici.");
+            return;
+        }
+        foreach (var (dx, dy) in plante.Occupation)
+        {
+            jardin.Terrains[terrainX, terrainY].Cases[caseY + dy, caseX + dx].Plante = plante;
+        }
+        Console.WriteLine($"Tu as planté une {plante.GetType().Name} !");
     }
+
+    public bool PeutPlanter(Plantes plante)
+    {
+        foreach (var (dx, dy) in plante.Occupation)
+        {
+            int x = caseX + dx;
+            int y = caseY + dy;
+
+            if (x < 0 || x >= 3 || y < 0 || y >= 3)
+                return false; // en dehors des limites du terrain
+
+            var c = jardin.Terrains[terrainX, terrainY].Cases[y, x];
+            if (c.Plante != null)
+                return false; // déjà occupée
+        }
+        return true;
+    }
+
 }
 

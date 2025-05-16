@@ -5,14 +5,13 @@ public abstract class Plantes
     public bool Comestible { get; set; }
     public string[] SaisonsDeSemis { get; set; }
     public string TerrainPrefere { get; set; }
-    public int TailleX { get; set; }
-    public int TailleY { get; set; }
+    public abstract List<(int dx, int dy)> Occupation { get; }
+
     public int JoursPourMaturité { get; set; }
     public int EauHebdomadaire { get; set; }
     public string Lumiere { get; set; }
     public (int min, int max) TemperaturePreferee { get; set; }
     public int EsperanceDeVie { get; set; }
-    public int ProductionParCycle { get; set; }
     public ConsoleColor Couleur { get; set; }
 
     // Attributs de croissance
@@ -80,15 +79,14 @@ public class Tomate : Plantes
         Comestible = true;
         SaisonsDeSemis = new string[] { "Automne" };
         TerrainPrefere = "Terre";
-        TailleX = 1;
-        TailleY = 1;
         JoursPourMaturité = 60;
         EauHebdomadaire = 25;
         Lumiere = "Plein Soleil";
         TemperaturePreferee = (20, 30);
         EsperanceDeVie = 120;
-        ProductionParCycle = 3;
     }
+
+    public override List<(int dx, int dy)> Occupation => new() { (0, 0) }; // 1 case
 
     public override string Croissance
     {
@@ -117,17 +115,26 @@ public class Mangue : Plantes
         Comestible = true;
         SaisonsDeSemis = new string[] { "Printemps" };
         TerrainPrefere = "Terre";
-        TailleX = 3;
-        TailleY = 3;
         JoursPourMaturité = 180;
         EauHebdomadaire = 20;
         Lumiere = "Plein Soleil";
         TemperaturePreferee = (25, 35);
         EsperanceDeVie = 3650;
-        ProductionParCycle = 10;
         Couleur = ConsoleColor.Yellow;
     }
 
+    public override List<(int dx, int dy)> Occupation
+    {
+        get
+        {
+            var coords = new List<(int dx, int dy)>();
+            for (int dx = 0; dx < 3; dx++)
+                for (int dy = 0; dy < 3; dy++)
+                    coords.Add((dx, dy));
+            return coords;
+        }
+    }
+    
     public override string Croissance => Phase switch
     {
         "Graine" => ".",
@@ -149,16 +156,15 @@ public class Aubergine : Plantes
         Comestible = true;
         SaisonsDeSemis = new string[] { "Automne" };
         TerrainPrefere = "Argile";
-        TailleX = 1;
-        TailleY = 1;
         JoursPourMaturité = 70;
         EauHebdomadaire = 30;
         Lumiere = "Plein Soleil";
         TemperaturePreferee = (22, 30);
         EsperanceDeVie = 120;
-        ProductionParCycle = 4;
         Couleur = ConsoleColor.DarkMagenta;
     }
+
+    public override List<(int dx, int dy)> Occupation => new() { (0, 0), (1, 0), (0, 1), (1, 1) }; // carré 2x2
 
     public override string Croissance => Phase switch
     {
@@ -181,16 +187,15 @@ public class The : Plantes
         Comestible = true;
         SaisonsDeSemis = new string[] { "Été" };
         TerrainPrefere = "Argile";
-        TailleX = 2;
-        TailleY = 2;
         JoursPourMaturité = 365;
         EauHebdomadaire = 35;
         Lumiere = "Mi-ombre";
         TemperaturePreferee = (18, 25);
         EsperanceDeVie = 1825;
-        ProductionParCycle = 5;
         Couleur = ConsoleColor.Green;
     }
+
+    public override List<(int dx, int dy)> Occupation => new() { (0, 0), (1, 0), (2, 0) }; // ligne horizontale
 
     public override string Croissance => Phase switch
     {
@@ -212,16 +217,15 @@ public class Hibiscus : Plantes
         Comestible = false;
         SaisonsDeSemis = new string[] { "Printemps", "Été", "Automne", "Hiver" };
         TerrainPrefere = "Sable";
-        TailleX = 2;
-        TailleY = 2;
         JoursPourMaturité = 90;
         EauHebdomadaire = 40;
         Lumiere = "Plein Soleil";
         TemperaturePreferee = (23, 35);
         EsperanceDeVie = 1000;
-        ProductionParCycle = 6;
-        Couleur = ConsoleColor.Magenta;
+        Couleur = ConsoleColor.DarkRed;
     }
+
+    public override List<(int dx, int dy)> Occupation => new() { (0, 0), (1, 0) };
 
     public override string Croissance => Phase switch
     {
