@@ -86,8 +86,11 @@ public class Tomate : Plantes
         EsperanceDeVie = 120;
     }
 
-    public override List<(int dx, int dy)> Occupation => new() { (0, 0) }; // 1 case
 
+    public override List<(int dx, int dy)> Occupation => new List<(int, int)>
+    {
+        (0, 0)
+    };
     public override string Croissance
     {
         get
@@ -123,17 +126,13 @@ public class Mangue : Plantes
         Couleur = ConsoleColor.Yellow;
     }
 
-    public override List<(int dx, int dy)> Occupation
+    public override List<(int dx, int dy)> Occupation => new List<(int, int)>
     {
-        get
-        {
-            var coords = new List<(int dx, int dy)>();
-            for (int dx = 0; dx < 3; dx++)
-                for (int dy = 0; dy < 3; dy++)
-                    coords.Add((dx, dy));
-            return coords;
-        }
-    }
+        (-1, -1), (0, -1), (1, -1),
+        (-1, 0),  (0, 0),  (1, 0),
+        (-1, 1),  (0, 1),  (1, 1)
+    };
+
     
     public override string Croissance => Phase switch
     {
@@ -164,7 +163,11 @@ public class Aubergine : Plantes
         Couleur = ConsoleColor.DarkMagenta;
     }
 
-    public override List<(int dx, int dy)> Occupation => new() { (0, 0), (1, 0), (0, 1), (1, 1) }; // carré 2x2
+    public override List<(int dx, int dy)> Occupation => new List<(int, int)>
+    {
+        (0, 0), (1, 0),
+        (0, 1), (1, 1)
+    };
 
     public override string Croissance => Phase switch
     {
@@ -195,8 +198,12 @@ public class The : Plantes
         Couleur = ConsoleColor.Green;
     }
 
-    public override List<(int dx, int dy)> Occupation => new() { (0, 0), (1, 0), (2, 0) }; // ligne horizontale
-
+    public override List<(int dx, int dy)> Occupation => new List<(int, int)>
+    {
+        (-1, 0), // case à gauche
+        (0, 0),  // case centrale
+        (1, 0)   // case à droite
+    };
     public override string Croissance => Phase switch
     {
         "Graine" => ".",
@@ -225,7 +232,10 @@ public class Hibiscus : Plantes
         Couleur = ConsoleColor.DarkRed;
     }
 
-    public override List<(int dx, int dy)> Occupation => new() { (0, 0), (1, 0) };
+    public override List<(int dx, int dy)> Occupation => new List<(int, int)>
+    {
+        (0, 0), (1, 0)
+    };
 
     public override string Croissance => Phase switch
     {

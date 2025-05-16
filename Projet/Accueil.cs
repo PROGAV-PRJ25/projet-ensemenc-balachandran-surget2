@@ -124,8 +124,8 @@ public class Accueil
                         Console.WriteLine("Tu as choisi d'arroser !");
                         break;
                     case ConsoleKey.D2:
+                        curseur.Deplacer();
                         Console.WriteLine("\nQuelles graines voulez-vous semer ?");
-                        // Filtrer les graines disponibles dans l'inventaire
                         var graines = inventaire.Objets.Where(o => o.Nom.Contains("graine")).ToList();
 
                         if (graines.Count == 0)
@@ -134,46 +134,45 @@ public class Accueil
                             break;
                         }
 
-                        // Afficher les options disponibles
                         for (int i = 0; i < graines.Count; i++)
                         {
                             Console.WriteLine($"{i + 1}. {graines[i].Nom} x{graines[i].Quantite}");
                         }
                         Console.Write("\nChoix (tapez le numéro correspondant) : ");
 
-                        // Lire l'entrée utilisateur et convertir en index
                         if (int.TryParse(Console.ReadLine()!, out int choixGraine) && choixGraine > 0 && choixGraine <= graines.Count)
                         {
                             var graineChoisie = graines[choixGraine - 1];
-                            curseur.Deplacer();
 
-                            // vérifier si case dispo
-                            var caseActuelle = curseur.ObtenirCase();
-                            if (caseActuelle.Plante != null)
+                            // Créer la plante correspondante
+                            Plantes plante = graineChoisie.Nom switch
                             {
-                                Console.WriteLine("Il y a déjà une plante ici !");
+                                "graine de tomate" => new Tomate(),
+                                "graine de aubergine" => new Aubergine(),
+                                "graine de mangue" => new Mangue(),
+                                "graine de hibiscus" => new Hibiscus(),
+                                "graine de thé" => new The(),
+                                _ => throw new InvalidOperationException("Type de graine non reconnu.")
+                            };
+
+                            // Vérifier si on peut planter à l'emplacement actuel (qui doit être obtenu depuis curseur)
+                            if (!curseur.PeutPlanter(plante))
+                            {
+                                Console.WriteLine("Impossible de planter ici : les cases sont occupées ou hors limites.");
                                 break;
                             }
 
+                            // Planter la plante (ici ta méthode doit planter et retourner un booléen ou rien si ok)
+                            curseur.Planter(plante);
+
+                            // Enlever la graine de l'inventaire seulement après plantation réussie
                             if (inventaire.SemerGraine(graineChoisie.Nom))
                             {
-                                // Créer la plante correspondante
-                                Plantes plante = graineChoisie.Nom switch
-                                {
-                                    "graine de tomate" => new Tomate(),
-                                    "graine de aubergine" => new Aubergine(),
-                                    "graine de mangue" => new Mangue(),
-                                    "graine de hibiscus" => new Hibiscus(),
-                                    "graine de thé" => new The(),
-                                    _ => throw new InvalidOperationException("Type de graine non reconnu.")
-                                };
-
-                                curseur.Planter(plante);
                                 Console.WriteLine($"Tu as semé une {graineChoisie.Nom} 🌱 !");
                             }
                             else
                             {
-                                Console.WriteLine("Erreur : Impossible de semer cette graine.");
+                                Console.WriteLine("Erreur : Impossible de retirer la graine de l'inventaire.");
                             }
                         }
                         else
@@ -183,8 +182,9 @@ public class Accueil
                         break;
 
 
+
                     case ConsoleKey.D3:
-                        var recoltes = jardin.InventaireRecolte(inventaire);
+                        var recoltes = jardin.InventaireRecoltes(inventaire);
                         if (recoltes.Count == 0)
                         {
                             Console.WriteLine("🌾 Aucune plante n'est prête à être récoltée.");
@@ -204,7 +204,7 @@ public class Accueil
                     case ConsoleKey.D4:
                         Console.WriteLine("Passage à la semaine suivante...");
                         Thread.Sleep(1000);
-                        jardin.ToutPousser(7);
+                        jardin.ToutPousser(20);
                         finTour = true; // Permet de sortir de la boucle et avancer la semaine
                         break;
                     default:

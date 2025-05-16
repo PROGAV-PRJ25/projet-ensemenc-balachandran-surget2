@@ -48,35 +48,77 @@ public class Jardin
     }
 
 
-    public Dictionary<string, int> InventaireRecolte(Inventaire inventaire)
+
+    public Dictionary<string, int> InventaireRecoltes(Inventaire inventaire)
     {
         var recoltes = new Dictionary<string, int>();
+        var plantesDejaRecoltees = new HashSet<Plantes>();
 
         foreach (var terrain in Terrains)
         {
-            foreach (var c in terrain.Cases)
+            int tailleX = terrain.Cases.GetLength(1);
+            int tailleY = terrain.Cases.GetLength(0);
+
+            for (int y = 0; y < tailleY; y++)
             {
-                if (c.Plante != null && c.Plante.Phase == "Mature")
+                for (int x = 0; x < tailleX; x++)
                 {
-                    string nom = c.Plante.GetType().Name.ToLower(); // ex : "tomate"
+                    var plante = terrain.Cases[y, x].Plante;
 
-                    // Ajout à l'inventaire
-                    inventaire.AjouterObjet(nom, 1);
+                    if (plante != null && plante.Phase == "Mature" && !plantesDejaRecoltees.Contains(plante))
+                    {
+                        // Vérifie si (x, y) est l'origine de la plante
+                        bool estOrigine = true;
+                        foreach (var (dx, dy) in plante.Occupation)
+                        {
+                            int cx = x + dx;
+                            int cy = y + dy;
 
-                    // Comptage pour affichage
-                    if (recoltes.ContainsKey(nom))
-                        recoltes[nom]++;
-                    else
-                        recoltes[nom] = 1;
+                            if (cx < 0 || cx >= tailleX || cy < 0 || cy >= tailleY)
+                            {
+                                estOrigine = false;
+                                break;
+                            }
 
-                    // Suppression de la plante après récolte
-                    c.Plante = null;
+                            if (terrain.Cases[cy, cx].Plante != plante)
+                            {
+                                estOrigine = false;
+                                break;
+                            }
+                        }
+
+                        if (!estOrigine) continue;
+
+                        // Récolte
+                        string nom = plante.GetType().Name.ToLower();
+                        int quantite = plante.Occupation.Count;
+
+                        inventaire.AjouterObjet(nom, quantite);
+
+                        if (recoltes.ContainsKey(nom))
+                            recoltes[nom] += quantite;
+                        else
+                            recoltes[nom] = quantite;
+
+                        plantesDejaRecoltees.Add(plante);
+
+                        // Supprimer la plante de toutes ses cases
+                        foreach (var (dx, dy) in plante.Occupation)
+                        {
+                            int cx = x + dx;
+                            int cy = y + dy;
+
+                            terrain.Cases[cy, cx].Plante = null;
+                        }
+                    }
                 }
             }
         }
 
         return recoltes;
     }
+
+
 
 
 
@@ -219,34 +261,40 @@ public class JardinCurseur
         return jardin.Terrains[terrainX, terrainY].Cases[caseY, caseX];
     }
 
-    public void Planter(Plantes plante)
+public void Planter(Plantes plante)
+{
+    if (!PeutPlanter(plante))
     {
-        if (!PeutPlanter(plante))
-        {
-            Console.WriteLine("Espace insuffisant pour planter ici.");
-            return;
-        }
-        foreach (var (dx, dy) in plante.Occupation)
-        {
-            jardin.Terrains[terrainX, terrainY].Cases[caseY + dy, caseX + dx].Plante = plante;
-        }
-        Console.WriteLine($"Tu as planté une {plante.GetType().Name} !");
+        Console.WriteLine("Impossible de planter ici : les cases sont occupées ou hors limites.");
+        Console.ReadKey();
+        return;
     }
 
+    foreach (var (dx, dy) in plante.Occupation)
+    {
+        int cx = caseX + dx;
+        int cy = caseY + dy;
+        jardin.Terrains[terrainX, terrainY].Cases[cy, cx].Plante = plante;
+    }
+
+    Console.WriteLine($"{plante.GetType().Name} plantée avec succès !");
+    Console.ReadKey();
+}
     public bool PeutPlanter(Plantes plante)
     {
+        var terrain = jardin.Terrains[terrainX, terrainY];
+
         foreach (var (dx, dy) in plante.Occupation)
         {
             int x = caseX + dx;
             int y = caseY + dy;
 
-            if (x < 0 || x >= 3 || y < 0 || y >= 3)
-                return false; // en dehors des limites du terrain
+            // Vérifie que la case est dans les limites
+            if (x < 0 || x >= 3 || y < 0 || y >= 3) return false;
 
-            var c = jardin.Terrains[terrainX, terrainY].Cases[y, x];
-            if (c.Plante != null)
-                return false; // déjà occupée
+            if (terrain.Cases[y, x].Plante != null) return false;
         }
+
         return true;
     }
 
