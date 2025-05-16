@@ -134,41 +134,53 @@ public class JardinCurseur
         }
     }
 
-public void Afficher()
-{
-    for (int tx = 0; tx < 2; tx++)
+    public void Afficher()
     {
-        for (int row = 0; row < 3; row++)
+        int nbTerrainsX = jardin.Terrains.GetLength(0);
+        int nbTerrainsY = jardin.Terrains.GetLength(1);
+
+        for (int tx = 0; tx < nbTerrainsX; tx++)
         {
-            for (int ty = 0; ty < 3; ty++)
+            for (int row = 0; row < 3; row++)
             {
-                for (int col = 0; col < 3; col++)
+                for (int ty = 0; ty < nbTerrainsY; ty++)
                 {
-                    bool estCurseur = (tx == terrainX && ty == terrainY && row == caseY && col == caseX);
-                    var caseActuelle = jardin.Terrains[tx, ty].Cases[row, col];
-                    var plante = caseActuelle.Plante;
-
-                    string symbole = plante == null ? "□" : plante.Croissance;
-
-                    if (estCurseur)
+                    for (int col = 0; col < 3; col++)
                     {
-                        Console.BackgroundColor = ConsoleColor.DarkGray;
+                        bool estCurseur = (tx == terrainX && ty == terrainY && row == caseY && col == caseX);
+                        var caseActuelle = jardin.Terrains[tx, ty].Cases[row, col];
+                        string symbole = caseActuelle.Plante?.Croissance ?? "□";
+
+                        if (estCurseur)
+                            Console.BackgroundColor = ConsoleColor.DarkGray;
+
+                        if (caseActuelle.Plante != null)
+                            Console.ForegroundColor = caseActuelle.Plante.Couleur;
+
+                        Console.Write(FormatCellule(symbole));
+                        Console.ResetColor();
                     }
 
-                    if (plante != null)
-                        Console.ForegroundColor = plante.Couleur;
-
-                    Console.Write($" {symbole} ");
-
-                    Console.ResetColor();
+                    Console.Write("   "); // Espace entre terrains
                 }
-                Console.Write("   ");
+
+                Console.WriteLine();
             }
-            Console.WriteLine();
+
+            Console.WriteLine(); // Espace entre rangées de terrains
         }
-        Console.WriteLine();
     }
-}
+
+    private string FormatCellule(string contenu)
+    {
+        if (contenu.Length == 1)
+            return $" {contenu}  ";
+        else if (contenu.Length == 2)
+            return $" {contenu} ";
+        else
+            return contenu.PadRight(4); // Sécurité pour les croissances personnalisées
+    }
+
 
 
 

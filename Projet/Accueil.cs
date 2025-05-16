@@ -80,7 +80,7 @@ public class Accueil
         inventaire.AjouterObjet("Graine de carotte", 3);
 
 
-        for (int semaine = 1; semaine <= 10; semaine++)
+        for (int semaine = 1; semaine <= 15; semaine++)
         {
 
             // Génère météo du jour
