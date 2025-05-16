@@ -47,6 +47,39 @@ public class Jardin
         }
     }
 
+
+    public Dictionary<string, int> InventaireRecolte(Inventaire inventaire)
+    {
+        var recoltes = new Dictionary<string, int>();
+
+        foreach (var terrain in Terrains)
+        {
+            foreach (var c in terrain.Cases)
+            {
+                if (c.Plante != null && c.Plante.Phase == "Mature")
+                {
+                    string nom = c.Plante.GetType().Name.ToLower(); // ex : "tomate"
+
+                    // Ajout à l'inventaire
+                    inventaire.AjouterObjet(nom, 1);
+
+                    // Comptage pour affichage
+                    if (recoltes.ContainsKey(nom))
+                        recoltes[nom]++;
+                    else
+                        recoltes[nom] = 1;
+
+                    // Suppression de la plante après récolte
+                    c.Plante = null;
+                }
+            }
+        }
+
+        return recoltes;
+    }
+
+
+
 }
 
 public class JardinCurseur
@@ -128,8 +161,8 @@ public class JardinCurseur
                     break;
 
                 case ConsoleKey.Enter: // Quitter le mode déplacement
-                enDeplacement = false;
-                break;
+                    enDeplacement = false;
+                    break;
             }
         }
     }
@@ -180,9 +213,6 @@ public class JardinCurseur
         else
             return contenu.PadRight(4); // Sécurité pour les croissances personnalisées
     }
-
-
-
 
     public Case ObtenirCase()
     {

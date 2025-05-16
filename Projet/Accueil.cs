@@ -181,8 +181,22 @@ public class Accueil
 
 
                     case ConsoleKey.D3:
-                        curseur.Deplacer();
-                        Console.WriteLine("Tu as choisi de récolter !");
+                        var recoltes = jardin.InventaireRecolte(inventaire);
+                        if (recoltes.Count == 0)
+                        {
+                            Console.WriteLine("🌾 Aucune plante n'est prête à être récoltée.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("🌿 Récolte effectuée !");
+                            foreach (var entry in recoltes)
+                            {
+                                string nom = entry.Key;
+                                int qte = entry.Value;
+                                string nomAffiche = qte > 1 ? nom + "s" : nom;
+                                Console.WriteLine($"- {qte} {nomAffiche} ajouté(s) à l'inventaire.");
+                            }
+                        }
                         break;
                     case ConsoleKey.D4:
                         Console.WriteLine("Passage à la semaine suivante...");

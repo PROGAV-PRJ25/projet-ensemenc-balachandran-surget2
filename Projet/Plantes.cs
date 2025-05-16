@@ -14,6 +14,7 @@ public abstract class Plantes
     public int EsperanceDeVie { get; set; }
     public int ProductionParCycle { get; set; }
     public ConsoleColor Couleur { get; set; }
+    public virtual string EmojiMature => "🌿";
 
     // Attributs de croissance
     public string Phase { get; set; } = "Graine";
@@ -33,7 +34,7 @@ public abstract class Plantes
                 "Graine" => ".",
                 "Jeune pousse" => "🌱",
                 "En croissance" => "🎋",
-                "Mature" => "🌿", // Peut être redéfini dans les classes filles
+                "Mature" => EmojiMature, // Peut être redéfini dans les classes filles
                 "Morte" => "x",
                 _ => "?"
             };
@@ -90,6 +91,8 @@ public class Tomate : Plantes
         ProductionParCycle = 3;
     }
 
+    public virtual string EmojiMature => "🍅";
+
     public override string Croissance
     {
         get
@@ -99,7 +102,7 @@ public class Tomate : Plantes
                 "Graine" => ".",
                 "Jeune pousse" => "🌱",
                 "En croissance" => "🎋",
-                "Mature" => "🍅",
+                "Mature" => EmojiMature,
                 "Morte" => "x",
                 _ => "?"
             };
@@ -128,12 +131,13 @@ public class Mangue : Plantes
         Couleur = ConsoleColor.Yellow;
     }
 
+    public virtual string EmojiMature => "🥭";
     public override string Croissance => Phase switch
     {
         "Graine" => ".",
         "Jeune pousse" => "🌱",
         "En croissance" => "🌳",
-        "Mature" => "🥭",
+        "Mature" => EmojiMature,
         "Morte" => "x",
         _ => "?"
     };
@@ -160,12 +164,14 @@ public class Aubergine : Plantes
         Couleur = ConsoleColor.DarkMagenta;
     }
 
+    public virtual string EmojiMature => "🍆";
+
     public override string Croissance => Phase switch
     {
         "Graine" => ".",
         "Jeune pousse" => "🌱",
         "En croissance" => "🪴",
-        "Mature" => "🍆",
+        "Mature" => EmojiMature,
         "Morte" => "x",
         _ => "?"
     };
@@ -192,12 +198,15 @@ public class The : Plantes
         Couleur = ConsoleColor.Green;
     }
 
+    public virtual string EmojiMature => "🍃";
+
+
     public override string Croissance => Phase switch
     {
         "Graine" => ".",
         "Jeune pousse" => "🌱",
         "En croissance" => "🌿",
-        "Mature" => "🍃",
+        "Mature" => EmojiMature,
         "Morte" => "x",
         _ => "?"
     };
@@ -223,12 +232,15 @@ public class Hibiscus : Plantes
         Couleur = ConsoleColor.Magenta;
     }
 
+    public virtual string EmojiMature => "🌺";
+
+
     public override string Croissance => Phase switch
     {
         "Graine" => ".",
         "Jeune pousse" => "🌱",
         "En croissance" => "🌿",
-        "Mature" => "🌺",
+        "Mature" => EmojiMature,
         "Morte" => "x",
         _ => "?"
     };
