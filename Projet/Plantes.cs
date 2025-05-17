@@ -6,7 +6,7 @@ public abstract class Plantes
     public string[] SaisonsDeSemis { get; set; }
     public string TerrainPrefere { get; set; }
     public abstract List<(int dx, int dy)> Occupation { get; }
-
+    public int NiveauHydratation { get; set; }
     public int JoursPourMaturité { get; set; }
     public int EauHebdomadaire { get; set; }
     public string Lumiere { get; set; }
@@ -19,10 +19,13 @@ public abstract class Plantes
     public int JoursDepuisSemis { get; set; } = 0;
 
     public Plantes()
-{
-    JoursDepuisSemis = 0;
-    Phase = "Graine";
-}
+    {
+        JoursDepuisSemis = 0;
+        Phase = "Graine";
+    }
+
+    
+
     public virtual string Croissance
     {
         get
@@ -65,6 +68,12 @@ public abstract class Plantes
         {
             Phase = "Graine";
         }
+    }
+
+    public void Arroser()
+    {
+        NiveauHydratation += 20;
+        if (NiveauHydratation > 100) NiveauHydratation = 100;
     }
 }
 

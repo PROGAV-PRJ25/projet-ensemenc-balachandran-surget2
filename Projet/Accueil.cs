@@ -99,19 +99,31 @@ public class Accueil
             while (!finTour)
             {
                 Console.Clear();
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine($"🌿 Semaine {semaine} 🌿");
+                Console.ResetColor();
+
                 meteo.Afficher();
+
                 Console.WriteLine();
+                Console.WriteLine();
+
                 curseur.Afficher();
+
                 Console.WriteLine();
+
                 inventaire.Afficher();
 
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("\nQue voulez-vous faire ?");
                 Console.WriteLine("1. Arroser les plantes");
                 Console.WriteLine("2. Semer une graine");
                 Console.WriteLine("3. Récolter des plantes");
                 Console.WriteLine("4. Passer à la semaine suivante");
                 Console.Write("Choix : ");
+                Console.ResetColor();
 
 
                 ConsoleKey choix = Console.ReadKey().Key;
@@ -120,9 +132,29 @@ public class Accueil
                 switch (choix)
                 {
                     case ConsoleKey.D1:
+                        Console.Clear();
+                        Console.WriteLine("Tu vas arroser une plante. 🌿");
+
+                        // Déplacement du curseur pour choisir l'emplacement à arroser
                         curseur.Deplacer();
-                        Console.WriteLine("Tu as choisi d'arroser !");
+
+                        // Récupérer la plante à l'endroit du curseur
+                        Plantes? plante = curseur.ObtenirPlante();
+
+                        if (plante == null)
+                        {
+                            Console.WriteLine("Il n'y a pas de plante ici à arroser.");
+                        }
+                        else
+                        {
+                            plante.Arroser(); // Appelle la méthode d'arrosage sur l'objet plante
+                            Console.WriteLine($"💧 Tu as arrosé la plante !");
+                        }
+
+                        Console.WriteLine("\nAppuie sur une touche pour revenir au menu.");
+                        Console.ReadKey();
                         break;
+
                     case ConsoleKey.D2:
                         curseur.Deplacer();
                         Console.WriteLine("\nQuelles graines voulez-vous semer ?");
@@ -134,18 +166,19 @@ public class Accueil
                             break;
                         }
 
+                        // Afficher toutes les graines disponibles
                         for (int i = 0; i < graines.Count; i++)
                         {
                             Console.WriteLine($"{i + 1}. {graines[i].Nom} x{graines[i].Quantite}");
                         }
+
                         Console.Write("\nChoix (tapez le numéro correspondant) : ");
 
                         if (int.TryParse(Console.ReadLine()!, out int choixGraine) && choixGraine > 0 && choixGraine <= graines.Count)
                         {
                             var graineChoisie = graines[choixGraine - 1];
 
-                            // Créer la plante correspondante
-                            Plantes plante = graineChoisie.Nom switch
+                            Plantes planteChoisie = graineChoisie.Nom switch
                             {
                                 "graine de tomate" => new Tomate(),
                                 "graine de aubergine" => new Aubergine(),
@@ -155,17 +188,14 @@ public class Accueil
                                 _ => throw new InvalidOperationException("Type de graine non reconnu.")
                             };
 
-                            // Vérifier si on peut planter à l'emplacement actuel (qui doit être obtenu depuis curseur)
-                            if (!curseur.PeutPlanter(plante))
+                            if (!curseur.PeutPlanter(planteChoisie))
                             {
                                 Console.WriteLine("Impossible de planter ici : les cases sont occupées ou hors limites.");
                                 break;
                             }
 
-                            // Planter la plante (ici ta méthode doit planter et retourner un booléen ou rien si ok)
-                            curseur.Planter(plante);
+                            curseur.Planter(planteChoisie);
 
-                            // Enlever la graine de l'inventaire seulement après plantation réussie
                             if (inventaire.SemerGraine(graineChoisie.Nom))
                             {
                                 Console.WriteLine($"Tu as semé une {graineChoisie.Nom} 🌱 !");
@@ -180,8 +210,6 @@ public class Accueil
                             Console.WriteLine("Choix invalide.");
                         }
                         break;
-
-
 
                     case ConsoleKey.D3:
                         var recoltes = jardin.InventaireRecoltes(inventaire);
@@ -201,25 +229,27 @@ public class Accueil
                             }
                         }
                         break;
+
                     case ConsoleKey.D4:
                         Console.WriteLine("Passage à la semaine suivante...");
                         Thread.Sleep(1000);
                         jardin.ToutPousser(20);
                         finTour = true; // Permet de sortir de la boucle et avancer la semaine
                         break;
+
                     default:
                         Console.WriteLine("Choix invalide.");
                         break;
                 }
 
-                finTour = true;
+
                 Console.WriteLine("\nAppuie sur une touche pour continuer...");
                 Console.ReadKey();
             }
         }
     }
-
-
+    
+    
     // Fonction pour lire les règles du jeu
     public void LireRegles()
     {

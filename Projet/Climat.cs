@@ -9,8 +9,8 @@ public class Meteo
     {
         Console.WriteLine(); // Ligne vide pour séparer du jardin
 
-        Console.WriteLine("=== Météo 🌤️ ===\n");
-        Console.WriteLine($"    Température : {Temperature}°C");
+        Console.WriteLine("      === Météo 🌤️ ===\n");
+        Console.WriteLine($"    T° : {Temperature}°C");
         Console.WriteLine($"    Humidité    : {Humidite}%");
         Console.WriteLine($"    Vent        : {Vent} km/h");
         Console.WriteLine($"    Ciel        : {Condition}\n");

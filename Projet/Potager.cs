@@ -141,6 +141,8 @@ public class JardinCurseur
         caseY = 0;
     }
 
+    
+
     public void Deplacer()
     {
         bool enDeplacement = true; // Variable pour quitter la boucle
@@ -261,25 +263,33 @@ public class JardinCurseur
         return jardin.Terrains[terrainX, terrainY].Cases[caseY, caseX];
     }
 
-public void Planter(Plantes plante)
-{
-    if (!PeutPlanter(plante))
+    public Plantes? ObtenirPlante()
     {
-        Console.WriteLine("Impossible de planter ici : les cases sont occupées ou hors limites.");
+        Case caseActuelle = this.ObtenirCase();
+        return caseActuelle.Plante;
+    }
+
+
+    public void Planter(Plantes plante)
+    {
+        if (!PeutPlanter(plante))
+        {
+            Console.WriteLine("Impossible de planter ici : les cases sont occupées ou hors limites.");
+            Console.ReadKey();
+            return;
+        }
+
+        foreach (var (dx, dy) in plante.Occupation)
+        {
+            int cx = caseX + dx;
+            int cy = caseY + dy;
+            jardin.Terrains[terrainX, terrainY].Cases[cy, cx].Plante = plante;
+        }
+
+        Console.WriteLine($"{plante.GetType().Name} plantée avec succès !");
         Console.ReadKey();
-        return;
     }
 
-    foreach (var (dx, dy) in plante.Occupation)
-    {
-        int cx = caseX + dx;
-        int cy = caseY + dy;
-        jardin.Terrains[terrainX, terrainY].Cases[cy, cx].Plante = plante;
-    }
-
-    Console.WriteLine($"{plante.GetType().Name} plantée avec succès !");
-    Console.ReadKey();
-}
     public bool PeutPlanter(Plantes plante)
     {
         var terrain = jardin.Terrains[terrainX, terrainY];
