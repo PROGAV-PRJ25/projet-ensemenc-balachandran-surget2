@@ -18,10 +18,17 @@ public abstract class Plantes
     public string Phase { get; set; } = "Graine";
     public int JoursDepuisSemis { get; set; } = 0;
 
+    // Pour savoir si la plante est considérée comme arrosée cette période (par exemple si hydratation >= 50)
+    public bool EstArrosee => NiveauHydratation >= EauHebdomadaire;
+
+    // Pour savoir si la plante est mature
+    public bool EstMature => Phase == "Mature";
+
     public Plantes()
     {
         JoursDepuisSemis = 0;
         Phase = "Graine";
+        NiveauHydratation = 0;
     }
 
     

@@ -118,6 +118,7 @@ public class Accueil
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("\nQue voulez-vous faire ?");
+                Console.WriteLine("0. Voir caractéristiques des plantes");
                 Console.WriteLine("1. Arroser les plantes");
                 Console.WriteLine("2. Semer une graine");
                 Console.WriteLine("3. Récolter des plantes");
@@ -131,6 +132,10 @@ public class Accueil
 
                 switch (choix)
                 {
+                    case ConsoleKey.D0:
+                        curseur.VoirCaracteristiquesEnDeplacement();
+                        break;
+
                     case ConsoleKey.D1:
                         Console.Clear();
                         Console.WriteLine("Tu vas arroser une plante. 🌿");
@@ -248,6 +253,7 @@ public class Accueil
             }
         }
     }
+
     
     
     // Fonction pour lire les règles du jeu

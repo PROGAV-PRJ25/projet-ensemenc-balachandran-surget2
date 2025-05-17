@@ -141,6 +141,95 @@ public class JardinCurseur
         caseY = 0;
     }
 
+    public void VoirCaracteristiquesEnDeplacement()
+    {
+        bool enDeplacement = true;
+
+        while (enDeplacement)
+        {
+            Console.Clear();
+
+            Afficher();
+
+            var plante = ObtenirPlante();
+
+            Console.WriteLine();
+            if (plante == null)
+            {
+                Console.WriteLine("Pas de plante ici.");
+            }
+            else
+            {
+                Console.WriteLine($"Plante : {plante.GetType().Name}");
+                Console.WriteLine($"Croissance : {plante.Croissance}");
+                Console.WriteLine($"Phase : {plante.Phase}");
+                Console.WriteLine($"Arrosage : {(plante.EstArrosee ? "Oui" : "Non")}");
+                Console.WriteLine($"Maturité : {(plante.EstMature ? "Oui" : "Non")}");
+                // Ajoute ici d’autres infos que tu souhaites afficher
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("Utilisez les flèches pour déplacer le curseur, Échap pour quitter.");
+
+            var keyInfo = Console.ReadKey(true);
+
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.UpArrow:
+                    if (caseY == 0)
+                    {
+                        terrainX = (terrainX + 1) % 2; // terrain précédent verticalement
+                        caseY = 2;
+                    }
+                    else
+                    {
+                        caseY--;
+                    }
+                    break;
+
+                case ConsoleKey.DownArrow:
+                    if (caseY == 2)
+                    {
+                        terrainX = (terrainX + 1) % 2; // terrain suivant verticalement
+                        caseY = 0;
+                    }
+                    else
+                    {
+                        caseY++;
+                    }
+                    break;
+
+                case ConsoleKey.LeftArrow:
+                    if (caseX == 0)
+                    {
+                        terrainY = (terrainY + 2) % 3; // terrain précédent horizontalement
+                        caseX = 2;
+                    }
+                    else
+                    {
+                        caseX--;
+                    }
+                    break;
+
+                case ConsoleKey.RightArrow:
+                    if (caseX == 2)
+                    {
+                        terrainY = (terrainY + 1) % 3; // terrain suivant horizontalement
+                        caseX = 0;
+                    }
+                    else
+                    {
+                        caseX++;
+                    }
+                    break;
+
+                case ConsoleKey.Escape:
+                    enDeplacement = false;
+                    break;
+            }
+        }
+    }
+
     
 
     public void Deplacer()
