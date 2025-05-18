@@ -143,12 +143,9 @@ public class JardinCurseur
 
     public void VoirCaracteristiquesEnDeplacement()
     {
-        bool enDeplacement = true;
-
-        while (enDeplacement)
+        BoucleDeplacement(() =>
         {
             Console.Clear();
-
             Afficher();
 
             var plante = ObtenirPlante();
@@ -170,6 +167,28 @@ public class JardinCurseur
 
             Console.WriteLine();
             Console.WriteLine("Utilisez les flèches pour déplacer le curseur, Échap pour quitter.");
+        },
+        ConsoleKey.Escape);
+    }
+
+    public void Deplacer()
+    {
+        BoucleDeplacement(() =>
+        {
+            Console.Clear();
+            Console.WriteLine("Choisissez une case avec les flèches et appuyez sur Entrée.");
+            Afficher();
+        },
+        ConsoleKey.Enter);
+    }
+
+    private void BoucleDeplacement(Action afficher, ConsoleKey toucheQuitter)
+    {
+        bool enDeplacement = true;
+
+        while (enDeplacement)
+        {
+            afficher();
 
             var keyInfo = Console.ReadKey(true);
 
@@ -178,7 +197,7 @@ public class JardinCurseur
                 case ConsoleKey.UpArrow:
                     if (caseY == 0)
                     {
-                        terrainX = (terrainX + 1) % 2; // terrain précédent verticalement
+                        terrainX = (terrainX + 1) % 2;
                         caseY = 2;
                     }
                     else
@@ -190,7 +209,7 @@ public class JardinCurseur
                 case ConsoleKey.DownArrow:
                     if (caseY == 2)
                     {
-                        terrainX = (terrainX + 1) % 2; // terrain suivant verticalement
+                        terrainX = (terrainX + 1) % 2;
                         caseY = 0;
                     }
                     else
@@ -202,7 +221,7 @@ public class JardinCurseur
                 case ConsoleKey.LeftArrow:
                     if (caseX == 0)
                     {
-                        terrainY = (terrainY + 2) % 3; // terrain précédent horizontalement
+                        terrainY = (terrainY + 2) % 3;
                         caseX = 2;
                     }
                     else
@@ -214,7 +233,7 @@ public class JardinCurseur
                 case ConsoleKey.RightArrow:
                     if (caseX == 2)
                     {
-                        terrainY = (terrainY + 1) % 3; // terrain suivant horizontalement
+                        terrainY = (terrainY + 1) % 3;
                         caseX = 0;
                     }
                     else
@@ -223,82 +242,13 @@ public class JardinCurseur
                     }
                     break;
 
-                case ConsoleKey.Escape:
+                case var key when key == toucheQuitter:
                     enDeplacement = false;
                     break;
             }
         }
     }
 
-    
-
-    public void Deplacer()
-    {
-        bool enDeplacement = true; // Variable pour quitter la boucle
-        while (enDeplacement)
-        {
-            Console.Clear();
-            Console.WriteLine("Choisissez une case avec les flèches et appuyez sur Entrée.");
-            Afficher();
-            var keyInfo = Console.ReadKey(true);
-            var key = keyInfo.Key;
-
-            switch (key)
-            {
-                case ConsoleKey.UpArrow:
-                    if (caseY == 0)
-                    {
-                        terrainX = (terrainX + 1) % 2; // terrain précédent verticalement
-                        caseY = 2;
-                    }
-                    else
-                    {
-                        caseY--;
-                    }
-                    break;
-
-                case ConsoleKey.DownArrow:
-                    if (caseY == 2)
-                    {
-                        terrainX = (terrainX + 1) % 2; // terrain suivant verticalement
-                        caseY = 0;
-                    }
-                    else
-                    {
-                        caseY++;
-                    }
-                    break;
-
-                case ConsoleKey.LeftArrow:
-                    if (caseX == 0)
-                    {
-                        terrainY = (terrainY + 2) % 3; // terrain précédent horizontalement
-                        caseX = 2;
-                    }
-                    else
-                    {
-                        caseX--;
-                    }
-                    break;
-
-                case ConsoleKey.RightArrow:
-                    if (caseX == 2)
-                    {
-                        terrainY = (terrainY + 1) % 3; // terrain suivant horizontalement
-                        caseX = 0;
-                    }
-                    else
-                    {
-                        caseX++;
-                    }
-                    break;
-
-                case ConsoleKey.Enter: // Quitter le mode déplacement
-                    enDeplacement = false;
-                    break;
-            }
-        }
-    }
 
     public void Afficher()
     {

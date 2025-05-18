@@ -82,12 +82,11 @@ public class Accueil
         inventaire.AjouterObjet("graine de thé", 3);
         inventaire.AjouterObjet("graine de hibiscus", 3);
 
-
+        Random rnd = new Random();
         for (int semaine = 1; semaine <= 15; semaine++)
         {
 
             // Génère météo du jour
-            Random rnd = new Random(); // Une seule instance utilisée
             meteo.Temperature = rnd.Next(25, 35);
             meteo.Humidite = rnd.Next(60, 90);
             meteo.Vent = rnd.Next(5, 20);
