@@ -67,10 +67,9 @@ public class Accueil
     {
         Console.Clear();
         Console.WriteLine("Vous avez choisi de jouer !");
-
-        Jardin jardin = new Jardin();
-        JardinCurseur curseur = new JardinCurseur(jardin);
         Meteo meteo = new Meteo();
+        Jardin jardin = new Jardin(meteo);
+        JardinCurseur curseur = new JardinCurseur(jardin);
         Inventaire inventaire = new Inventaire();
 
 
@@ -87,7 +86,7 @@ public class Accueil
         {
 
             // Génère météo du jour
-            meteo.Temperature = rnd.Next(25, 35);
+            meteo.Temperature = rnd.Next(20, 35);
             meteo.Humidite = rnd.Next(60, 90);
             meteo.Vent = rnd.Next(5, 20);
             meteo.Condition = new[] { "Ensoleillé", "Nuageux", "Pluie" }[rnd.Next(0, 3)];
@@ -238,6 +237,8 @@ public class Accueil
                         Console.WriteLine("Passage à la semaine suivante...");
                         Thread.Sleep(1000);
                         jardin.ToutPousser(20);
+                        // Baisser l'hydratation de toutes les plantes de 20
+                        BaisserHydratationPlantes(jardin);
                         finTour = true; // Permet de sortir de la boucle et avancer la semaine
                         break;
 
@@ -250,6 +251,16 @@ public class Accueil
                 Console.WriteLine("\nAppuie sur une touche pour continuer...");
                 Console.ReadKey();
             }
+        }
+    }
+
+    public void BaisserHydratationPlantes(Jardin jardin)
+    {
+        foreach (var plante in jardin.ObtenirToutesLesPlantes())
+        {
+            plante.NiveauHydratation -= 20;
+            if (plante.NiveauHydratation < 0)
+                plante.NiveauHydratation = 0;
         }
     }
 

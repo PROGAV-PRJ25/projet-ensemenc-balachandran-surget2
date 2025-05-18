@@ -4,7 +4,8 @@ public class Urgence
 {
     public void AfficherPageUrgence()
     {
-        Jardin jardin = new Jardin();
+        Meteo meteo = new Meteo(); // ou utilise les bons paramètres si Meteo a un constructeur
+        Jardin jardin = new Jardin(meteo);
         JardinCurseur curseur = new JardinCurseur(jardin);
 
         // Mode URGENCE qui clignote
@@ -30,7 +31,8 @@ public class Urgence
 
     public void Elephant()
     {
-        Jardin jardin = new Jardin();
+        Meteo meteo = new Meteo();
+        Jardin jardin = new Jardin(meteo);
         JardinCurseur curseur = new JardinCurseur(jardin);
         Console.Clear();
 

@@ -24,9 +24,11 @@ public class Terrain
 public class Jardin
 {
     public Terrain[,] Terrains { get; }
+    private Meteo meteo;
 
-    public Jardin()
+    public Jardin(Meteo meteo)
     {
+        this.meteo = meteo;
         Terrains = new Terrain[2, 3];
         for (int i = 0; i < 2; i++)
             for (int j = 0; j < 3; j++)
@@ -41,12 +43,32 @@ public class Jardin
             {
                 foreach (var c in terrain.Cases)
                 {
-                    c.Plante?.Grandir();
+                    if (c.Plante != null)
+                    {
+                        c.Plante.Grandir(meteo);
+                    }
                 }
             }
         }
     }
 
+    public List<Plantes> ObtenirToutesLesPlantes()
+    {
+        var plantes = new List<Plantes>();
+
+        foreach (var terrain in Terrains)
+        {
+            foreach (var c in terrain.Cases)
+            {
+                if (c.Plante != null && !plantes.Contains(c.Plante))
+                {
+                    plantes.Add(c.Plante);
+                }
+            }
+        }
+
+        return plantes;
+    }
 
 
     public Dictionary<string, int> InventaireRecoltes(Inventaire inventaire)
@@ -117,11 +139,6 @@ public class Jardin
 
         return recoltes;
     }
-
-
-
-
-
 }
 
 public class JardinCurseur
@@ -158,11 +175,18 @@ public class JardinCurseur
             else
             {
                 Console.WriteLine($"Plante : {plante.GetType().Name}");
-                Console.WriteLine($"Croissance : {plante.Croissance}");
                 Console.WriteLine($"Phase : {plante.Phase}");
-                Console.WriteLine($"Arrosage : {(plante.EstArrosee ? "Oui" : "Non")}");
-                Console.WriteLine($"Maturité : {(plante.EstMature ? "Oui" : "Non")}");
-                // Ajoute ici d’autres infos que tu souhaites afficher
+                Console.WriteLine($"Phase actuelle : {plante.PhaseActuelle} / {plante.NombrePhases}");
+                // Niveau d'hydratation
+                Console.WriteLine($"Hydratation : {plante.NiveauHydratation} / {plante.EauHebdomadaire}");
+
+                // Indiquer si elle a besoin de plus ou moins d'eau
+                if (plante.NiveauHydratation < plante.EauHebdomadaire)
+                    Console.WriteLine("Besoin d'eau : Plus d'eau nécessaire");
+                else if (plante.NiveauHydratation > plante.EauHebdomadaire * 2)
+                    Console.WriteLine("Besoin d'eau : Trop d'eau, réduire l'arrosage");
+                else
+                    Console.WriteLine("Besoin d'eau : Hydratation correcte");
             }
 
             Console.WriteLine();

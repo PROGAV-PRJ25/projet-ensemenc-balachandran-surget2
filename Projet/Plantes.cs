@@ -16,6 +16,8 @@ public abstract class Plantes
 
     // Attributs de croissance
     public string Phase { get; set; } = "Graine";
+    public int PhaseActuelle { get; set; }  // index de la phase courante
+    public int NombrePhases { get; set; } // nombre total de phases
     public int JoursDepuisSemis { get; set; } = 0;
 
     // Pour savoir si la plante est considérée comme arrosée cette période (par exemple si hydratation >= 50)
@@ -42,7 +44,7 @@ public abstract class Plantes
                 "Graine" => ".",
                 "Jeune pousse" => "🌱",
                 "En croissance" => "🎋",
-                "Mature" => "🌿", // Peut être redéfini dans les classes filles
+                "Mature" => "🌿", 
                 "Morte" => "x",
                 _ => "?"
             };
@@ -50,38 +52,80 @@ public abstract class Plantes
     }
 
     // Croissance gérée ici pour toutes les plantes
-    public void Grandir()
+    public void Grandir(Meteo meteo)
     {
-        JoursDepuisSemis++;
         if (Phase == "Morte") return;
 
-        if (JoursDepuisSemis >= EsperanceDeVie)
+        // Croissance normale + boost si pluie
+        int joursACroissance = 1;
+
+        // Vérification température : si en dehors des bornes préférées, pas de croissance
+        if (meteo.Temperature < TemperaturePreferee.min - 5 || meteo.Temperature > TemperaturePreferee.max + 5)
         {
-            Phase = "Morte";
+            // Pas de croissance car température vraiment trop extrême
+            return;
         }
-        else if (JoursDepuisSemis >= JoursPourMaturité)
+        else if (meteo.Temperature < TemperaturePreferee.min || meteo.Temperature > TemperaturePreferee.max)
         {
-            Phase = "Mature";
+            joursACroissance = 1; // croissance lente mais possible
         }
-        else if (JoursDepuisSemis >= JoursPourMaturité * 2 / 3)
+
+        if (meteo.Condition.ToLower().Contains("pluie"))
         {
-            Phase = "En croissance";
+            joursACroissance = 2; // double croissance par jour de pluie
+            NiveauHydratation += 20;
         }
-        else if (JoursDepuisSemis >= JoursPourMaturité / 3)
+
+
+
+        if (NiveauHydratation < EauHebdomadaire) // On peut considérer EauHebdomadaire comme seuil minimal ici
         {
-            Phase = "Jeune pousse";
+            // Pas assez d'eau, pas de croissance
+            return;
         }
-        else
+        if (NiveauHydratation > EauHebdomadaire * 2) // trop d'eau
         {
-            Phase = "Graine";
+            // Trop d'eau = stress = pas de croissance
+            return;
         }
+
+
+        for (int i = 0; i < joursACroissance; i++)
+        {
+            JoursDepuisSemis++;
+            if (JoursDepuisSemis >= EsperanceDeVie)
+            {
+                Phase = "Morte";
+            }
+            else if (JoursDepuisSemis >= JoursPourMaturité)
+            {
+                Phase = "Mature";
+                PhaseActuelle = 4;
+            }
+            else if (JoursDepuisSemis >= JoursPourMaturité * 2 / 3)
+            {
+                Phase = "En croissance";
+                PhaseActuelle = 3;
+            }
+            else if (JoursDepuisSemis >= JoursPourMaturité / 3)
+            {
+                Phase = "Jeune pousse";
+                PhaseActuelle = 2;
+            }
+            else
+            {
+                Phase = "Graine";
+                PhaseActuelle = 1;
+            }
+        }
+
     }
 
     public void Arroser()
     {
         NiveauHydratation += 20;
-        if (NiveauHydratation > 100) NiveauHydratation = 100;
     }
+
 }
 
 
@@ -100,6 +144,7 @@ public class Tomate : Plantes
         Lumiere = "Plein Soleil";
         TemperaturePreferee = (20, 30);
         EsperanceDeVie = 120;
+        NombrePhases = 4; // Graine, Jeune pousse, En croissance, Mature
     }
 
 
@@ -140,6 +185,7 @@ public class Mangue : Plantes
         TemperaturePreferee = (25, 35);
         EsperanceDeVie = 3650;
         Couleur = ConsoleColor.Yellow;
+        NombrePhases = 4; // Graine, Jeune pousse, En croissance, Mature
     }
 
     public override List<(int dx, int dy)> Occupation => new List<(int, int)>
@@ -177,6 +223,7 @@ public class Aubergine : Plantes
         TemperaturePreferee = (22, 30);
         EsperanceDeVie = 120;
         Couleur = ConsoleColor.DarkMagenta;
+        NombrePhases = 4; // Graine, Jeune pousse, En croissance, Mature
     }
 
     public override List<(int dx, int dy)> Occupation => new List<(int, int)>
@@ -209,9 +256,10 @@ public class The : Plantes
         JoursPourMaturité = 365;
         EauHebdomadaire = 35;
         Lumiere = "Mi-ombre";
-        TemperaturePreferee = (18, 25);
+        TemperaturePreferee = (22, 28);
         EsperanceDeVie = 1825;
         Couleur = ConsoleColor.Green;
+        NombrePhases = 4; // Graine, Jeune pousse, En croissance, Mature
     }
 
     public override List<(int dx, int dy)> Occupation => new List<(int, int)>
@@ -246,6 +294,7 @@ public class Hibiscus : Plantes
         TemperaturePreferee = (23, 35);
         EsperanceDeVie = 1000;
         Couleur = ConsoleColor.DarkRed;
+        NombrePhases = 4; // Graine, Jeune pousse, En croissance, Mature
     }
 
     public override List<(int dx, int dy)> Occupation => new List<(int, int)>

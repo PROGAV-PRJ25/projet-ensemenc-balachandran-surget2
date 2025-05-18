@@ -11,9 +11,14 @@ public class Meteo
 
         Console.WriteLine("      === Météo 🌤️ ===\n");
         Console.WriteLine($"    T° : {Temperature}°C");
-        Console.WriteLine($"    Humidité    : {Humidite}%");
         Console.WriteLine($"    Vent        : {Vent} km/h");
         Console.WriteLine($"    Ciel        : {Condition}\n");
 
+    }
+
+    public bool Pleut()
+    {
+        string conditionLower = Condition.ToLower();
+        return conditionLower.Contains("pluie");
     }
 }
