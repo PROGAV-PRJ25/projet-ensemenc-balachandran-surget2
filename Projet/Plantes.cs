@@ -65,7 +65,7 @@ public abstract class Plantes
             // Pas de croissance car température vraiment trop extrême
             return;
         }
-        else if (meteo.Temperature < TemperaturePreferee.min || meteo.Temperature > TemperaturePreferee.max)
+        else if (meteo.Temperature > TemperaturePreferee.min || meteo.Temperature < TemperaturePreferee.max)
         {
             joursACroissance = 1; // croissance lente mais possible
         }
@@ -145,6 +145,7 @@ public class Tomate : Plantes
         TemperaturePreferee = (20, 30);
         EsperanceDeVie = 120;
         NombrePhases = 4; // Graine, Jeune pousse, En croissance, Mature
+        NiveauHydratation = 0;
     }
 
 
@@ -186,6 +187,7 @@ public class Mangue : Plantes
         EsperanceDeVie = 3650;
         Couleur = ConsoleColor.Yellow;
         NombrePhases = 4; // Graine, Jeune pousse, En croissance, Mature
+        NiveauHydratation = 0;
     }
 
     public override List<(int dx, int dy)> Occupation => new List<(int, int)>
@@ -224,6 +226,7 @@ public class Aubergine : Plantes
         EsperanceDeVie = 120;
         Couleur = ConsoleColor.DarkMagenta;
         NombrePhases = 4; // Graine, Jeune pousse, En croissance, Mature
+        NiveauHydratation = 0;
     }
 
     public override List<(int dx, int dy)> Occupation => new List<(int, int)>
@@ -260,6 +263,7 @@ public class The : Plantes
         EsperanceDeVie = 1825;
         Couleur = ConsoleColor.Green;
         NombrePhases = 4; // Graine, Jeune pousse, En croissance, Mature
+        NiveauHydratation = 0;
     }
 
     public override List<(int dx, int dy)> Occupation => new List<(int, int)>
@@ -295,6 +299,7 @@ public class Hibiscus : Plantes
         EsperanceDeVie = 1000;
         Couleur = ConsoleColor.DarkRed;
         NombrePhases = 4; // Graine, Jeune pousse, En croissance, Mature
+        NiveauHydratation = 0;
     }
 
     public override List<(int dx, int dy)> Occupation => new List<(int, int)>
