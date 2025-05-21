@@ -56,7 +56,6 @@ public abstract class Plantes
     {
         if (Phase == "Morte") return;
 
-        // Croissance normale + boost si pluie
         int joursACroissance = 1;
 
         // Vérification température : si en dehors des bornes préférées, pas de croissance
@@ -70,14 +69,6 @@ public abstract class Plantes
             joursACroissance = 1; // croissance lente mais possible
         }
 
-        if (meteo.Condition.ToLower().Contains("pluie"))
-        {
-            joursACroissance = 2; // double croissance par jour de pluie
-            NiveauHydratation += 20;
-        }
-
-
-
         if (NiveauHydratation < EauHebdomadaire) // On peut considérer EauHebdomadaire comme seuil minimal ici
         {
             // Pas assez d'eau, pas de croissance
@@ -88,7 +79,6 @@ public abstract class Plantes
             // Trop d'eau = stress = pas de croissance
             return;
         }
-
 
         for (int i = 0; i < joursACroissance; i++)
         {
@@ -120,6 +110,7 @@ public abstract class Plantes
         }
 
     }
+
 
     public void Arroser()
     {
@@ -327,7 +318,7 @@ public class Comestibles {
 
 }
 public class PlantesOrnementales {
-
+         
 }
 public class PlantesIndustrielles {
 

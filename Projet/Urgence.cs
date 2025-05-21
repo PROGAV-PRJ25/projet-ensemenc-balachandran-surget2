@@ -46,12 +46,12 @@ public class Urgence
 
         string reponse = Console.ReadLine()?.Trim().ToLower();
 
-        Random rnd = new Random();
-        int nombreAleatoire = rnd.Next(1, 4);
+         Random rnd = new Random();
+        int nombreAleatoire = rnd.Next(1, 10);
 
         if (reponse == "oui")
         {
-            if (nombreAleatoire == 1 || nombreAleatoire == 2)
+            if (nombreAleatoire == 1 )
             {
                 Console.Clear();
                 curseur.Afficher();
@@ -135,7 +135,9 @@ public class Urgence
             for (int col = 0; col < largeur; col++)
             {
                 Console.Clear();
-                Console.WriteLine("💥 L'éléphant fonce à travers votre potager !");
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine(" Les éléphants foncent à travers votre potager !");
+                Console.ResetColor();
 
                 for (int row = 0; row < hauteur; row++)
                 {
@@ -148,8 +150,24 @@ public class Urgence
                                 Console.ForegroundColor = ConsoleColor.Gray;
                                 Console.Write("🐘 ");
                                 Console.ResetColor();
-                                // Il écrase la plante ici :
-                                jardin.Terrains[tx, ty].Cases[row, j].Plante = null;
+
+                                // Récupérer la plante présente à cet emplacement
+                                var plante = jardin.Terrains[tx, ty].Cases[row, j].Plante;
+
+                                // Supprimer toutes les cases occupées par cette plante
+                                if (plante != null)
+                                {
+                                    foreach (var (dx, dy) in plante.Occupation)
+                                    {
+                                        int cx = j + dx;
+                                        int cy = row + dy;
+
+                                        if (cx >= 0 && cx < 3 && cy >= 0 && cy < 3)
+                                        {
+                                            jardin.Terrains[tx, ty].Cases[cy, cx].Plante = null;
+                                        }
+                                    }
+                                }
                             }
                             else
                             {
@@ -174,7 +192,7 @@ public class Urgence
         }
 
         Console.ForegroundColor = ConsoleColor.DarkGray;
-        Console.WriteLine("\n🐘 L'éléphant a terminé sa traversée !");
+        Console.WriteLine("\n Les éléphants ont terminé leur traversée !");
         Console.ResetColor();
         Console.WriteLine("Appuyez sur une touche pour continuer...");
         Console.ReadKey();
