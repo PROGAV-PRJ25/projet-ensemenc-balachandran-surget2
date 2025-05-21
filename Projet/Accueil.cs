@@ -71,7 +71,7 @@ public class Accueil
         Jardin jardin = new Jardin(meteo);
         JardinCurseur curseur = new JardinCurseur(jardin);
         Inventaire inventaire = new Inventaire();
-        Urgence Urgence = new Urgence();
+        Urgence Urgence = new Urgence(jardin, curseur);
 
 
         // Ajouter des objets à l'inventaire
@@ -242,19 +242,13 @@ public class Accueil
                         jardin.ToutPousser(20);
                         // Baisser l'hydratation de toutes les plantes de 20
                         BaisserHydratationPlantes(jardin);
-/*
+
                         // URGENCE
-                        if (rnd.Next(1, 4) == 1) // ~20% de chances
+                        if (rnd.Next(1, 4) == 1)
                         {
-                            Console.Clear();
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("\n🚨 URGENCE ! Un éléphant sauvage a pénétré dans votre potager !");
-                            Console.ResetColor();
                             Urgence.AfficherPageUrgence();
                             Urgence.Elephant();
-                            Console.WriteLine("Appuyez sur une touche pour continuer.");
-                            Console.ReadKey();
-                        }*/
+                        }
                         finTour = true; // Permet de sortir de la boucle et avancer la semaine
                         break;
 
