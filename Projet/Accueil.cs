@@ -69,6 +69,17 @@ public class Accueil
     {
         Console.Clear();
         Console.WriteLine("Vous avez choisi de jouer !");
+        Console.WriteLine("Choisissez votre saison de départ :");
+        Console.WriteLine("1. Printemps 🌸  2. Été 🌞  3. Automne 🍂   4. Hiver ⛄");
+        string choixSaison = Console.ReadKey(true).Key switch
+        {
+            ConsoleKey.D1 => "Printemps",
+            ConsoleKey.D2 => "Été",
+            ConsoleKey.D3 => "Automne",
+            ConsoleKey.D4 => "Hiver",
+            _             => "Printemps"
+        };
+        Console.WriteLine($"Saison sélectionnée : {choixSaison}\n");
         Meteo meteo = new Meteo();
         Jardin jardin = new Jardin(meteo);
         JardinCurseur curseur = new JardinCurseur(jardin);
@@ -89,17 +100,18 @@ public class Accueil
         {
 
             // Génère météo du jour
-            meteo.Temperature = rnd.Next(20, 35);
-            meteo.Humidite = rnd.Next(60, 90);
-            meteo.Vent = rnd.Next(5, 20);
-            meteo.Condition = new[] { "Ensoleillé", "Nuageux", "Pluie" }[rnd.Next(0, 3)];
-
+            string saison = ObtenirSaison(semaine);
+            GenererMeteo(meteo, saison, rnd); 
             AjoutEauPluie(jardin, meteo);
 
             bool finTour = false;
             while (!finTour)
             {
                 Console.Clear();
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.WriteLine($"=== Saison : {saison} ===");
+                Console.ResetColor();
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine($"🌿 Semaine {semaine} 🌿");
@@ -275,7 +287,7 @@ public class Accueil
                     case ConsoleKey.D4:
                                 Console.WriteLine("Passage à la semaine suivante...");
                                 Thread.Sleep(1000);
-                                jardin.ToutPousser(7);
+                                jardin.ToutPousser(meteo, 7);
                                 // Baisser l'hydratation de toutes les plantes de 20
                                 BaisserHydratationPlantes(jardin);
 
@@ -359,7 +371,67 @@ public class Accueil
             if (pluie)
                 plante.NiveauHydratation += 10;
         }
-     }
+    }
+
+
+    public void GenererMeteo(Meteo meteo, string saison, Random rnd)
+    {
+        int tMin, tMax, hMin, hMax, vMin, vMax;
+        Dictionary<string, int> proba;
+
+        switch (saison)
+        {
+            case "Printemps":
+                tMin = 10; tMax = 20; hMin = 50; hMax = 70; vMin = 5; vMax = 15;
+                proba = new() { ["Ensoleillé"] = 50, ["Nuageux"] = 30, ["Pluie"] = 20 };
+                break;
+            case "Été":
+                tMin = 25; tMax = 35; hMin = 60; hMax = 80; vMin = 5; vMax = 20;
+                proba = new() { ["Ensoleillé"] = 60, ["Nuageux"] = 20, ["Pluie"] = 20 };
+                break;
+            case "Automne":
+                tMin = 10; tMax = 20; hMin = 40; hMax = 60; vMin = 5; vMax = 15;
+                proba = new() { ["Ensoleillé"] = 40, ["Nuageux"] = 40, ["Pluie"] = 20 };
+                break;
+            case "Hiver":
+                tMin = 0; tMax = 10; hMin = 30; hMax = 50; vMin = 10; vMax = 25;
+                proba = new() { ["Ensoleillé"] = 30, ["Nuageux"] = 50, ["Pluie"] = 20 };
+                break;
+            default:
+                tMin = 20; tMax = 30; hMin = 50; hMax = 70; vMin = 5; vMax = 20;
+                proba = new() { ["Ensoleillé"] = 50, ["Nuageux"] = 30, ["Pluie"] = 20 };
+                break;
+        }
+
+        meteo.Temperature = rnd.Next(tMin, tMax + 1);
+        meteo.Humidite = rnd.Next(hMin, hMax + 1);
+        meteo.Vent = rnd.Next(vMin, vMax + 1);
+
+        // tirage pondéré de la condition
+        int total = proba.Values.Sum();
+        int tir = rnd.Next(1, total + 1), cumul = 0;
+        foreach (var kv in proba)
+        {
+            cumul += kv.Value;
+            if (tir <= cumul)
+            {
+                meteo.Condition = kv.Key;
+                break;
+            }
+        }
+    }
+
+    private readonly string[] Saisons = { "Printemps", "Été", "Automne", "Hiver" };
+    private const int SemainesParSaison = 4;
+
+    public string ObtenirSaison(int semaine)
+{
+    // (semaine-1) pour que la semaine 1 soit dans le 1er index
+    int index = (semaine - 1) / SemainesParSaison % Saisons.Length;
+    return Saisons[index];
+}
+
+
 
     
     
