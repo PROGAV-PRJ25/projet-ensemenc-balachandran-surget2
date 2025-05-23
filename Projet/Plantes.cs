@@ -229,7 +229,7 @@ public class Aubergine : Plantes
     {
         "Graine" => ".",
         "Jeune pousse" => "🌱",
-        "En croissance" => "🪴",
+        "En croissance" => "🌾",
         "Mature" => "🍆",
         "Morte" => "x",
         _ => "?"
