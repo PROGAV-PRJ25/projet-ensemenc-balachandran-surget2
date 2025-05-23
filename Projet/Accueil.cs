@@ -32,6 +32,7 @@ public class Accueil
 
         // Afficher le menu principal
         Console.WriteLine(TextHelper.CenterText("\nQue souhaitez-vous faire ?"));
+        Console.WriteLine("");
         Console.WriteLine(TextHelper.CenterText("1. Jouer"));
         Console.WriteLine(TextHelper.CenterText("2. Lire les règles"));
         Console.WriteLine(TextHelper.CenterText("3. Quitter"));
@@ -124,6 +125,7 @@ public class Accueil
                 Console.WriteLine("2. Semer une graine");
                 Console.WriteLine("3. Récolter des plantes");
                 Console.WriteLine("4. Passer à la semaine suivante");
+                Console.WriteLine("5. Retour à l'accueil (⚠ progression perdue)");
                 Console.Write("Choix : ");
                 Console.ResetColor();
 
@@ -283,12 +285,32 @@ public class Accueil
                             default:
                                 Console.WriteLine("Choix invalide.");
                                 break;
+                    
+                    case ConsoleKey.D5:
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("\n⚠ Vous êtes sur le point de revenir à l'écran d'accueil.");
+                            Console.WriteLine("Toute votre progression actuelle sera PERDUE !");
+                            Console.ResetColor();
+                            Console.Write("\nÊtes-vous sûr ? (o/n) : ");
+                            var confirmation = Console.ReadKey().Key;
+                            Console.WriteLine();
+
+                            if (confirmation == ConsoleKey.O)
+                            {
+                                Console.WriteLine("\nRetour à l'accueil...");
+                                Thread.Sleep(1000);
+                                AfficherPageAccueil(); // Retour à l'accueil
                             }
-
-
-                            Console.WriteLine("\nAppuie sur une touche pour continuer...");
-                            Console.ReadKey();
-                        }
+                            else
+                            {
+                                Console.WriteLine("\nAction annulée. Retour au jeu.");
+                                Thread.Sleep(1000);
+                            }
+                            break;
+                }
+                Console.WriteLine("\nAppuie sur une touche pour continuer...");
+                Console.ReadKey();
+            }
         }
     }
 
