@@ -125,8 +125,9 @@ public class Accueil
                 Console.WriteLine("2. Semer une graine");
                 Console.WriteLine("3. Récolter des plantes");
                 Console.WriteLine("4. Passer à la semaine suivante");
-                Console.WriteLine("5. Retour à l'accueil (⚠ progression perdue)");
-                Console.WriteLine("6. Accéder à la boutique 🛒");
+                Console.WriteLine("5. Accéder à la boutique 🛒");
+                Console.WriteLine("");
+                Console.WriteLine("6. Retour à l'accueil (⚠ progression perdue)");
                 Console.Write("Choix : ");
                 Console.ResetColor();
 
@@ -286,8 +287,13 @@ public class Accueil
                             default:
                                 Console.WriteLine("Choix invalide.");
                                 break;
-                    
+
                     case ConsoleKey.D5:
+                            var boutique = new Boutique();
+                            boutique.Afficher(joueur);
+                            break;
+                    
+                    case ConsoleKey.D6:
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("\n⚠ Vous êtes sur le point de revenir à l'écran d'accueil.");
                             Console.WriteLine("Toute votre progression actuelle sera PERDUE !");
@@ -307,11 +313,7 @@ public class Accueil
                                 Console.WriteLine("\nAction annulée. Retour au jeu.");
                                 Thread.Sleep(1000);
                             }
-                        break;
-                    case ConsoleKey.D6:
-                            var boutique = new Boutique();
-                            boutique.Afficher(joueur);
-                        break;
+                            break;
                 }
                 Console.WriteLine("\nAppuie sur une touche pour continuer...");
                 Console.ReadKey();
