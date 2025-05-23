@@ -100,67 +100,62 @@ public class Jardin
 
         foreach (var terrain in Terrains)
         {
-            int tailleX = terrain.Cases.GetLength(1);
-            int tailleY = terrain.Cases.GetLength(0);
+            int largeur = terrain.Cases.GetLength(1);
+            int hauteur = terrain.Cases.GetLength(0);
 
-            for (int y = 0; y < tailleY; y++)
+            for (int y = 0; y < hauteur; y++)
+            for (int x = 0; x < largeur; x++)
             {
-                for (int x = 0; x < tailleX; x++)
+                var plante = terrain.Cases[y, x].Plante;
+                if (plante == null  || !plante.EstMature || plantesDejaRecoltees.Contains(plante))
+                    continue;
+
+                // On ne récolte qu'à partir de l'origine de la plante
+                bool estOrigine = true;
+                foreach (var (dx, dy) in plante.Occupation)
                 {
-                    var plante = terrain.Cases[y, x].Plante;
-
-                    if (plante != null && plante.Phase == "Mature" && !plantesDejaRecoltees.Contains(plante))
+                    int cx = x + dx, cy = y + dy;
+                    if (cx < 0 || cx >= largeur 
+                    || cy < 0 || cy >= hauteur
+                    || terrain.Cases[cy, cx].Plante != plante)
                     {
-                        // Vérifie si (x, y) est l'origine de la plante
-                        bool estOrigine = true;
-                        foreach (var (dx, dy) in plante.Occupation)
-                        {
-                            int cx = x + dx;
-                            int cy = y + dy;
-
-                            if (cx < 0 || cx >= tailleX || cy < 0 || cy >= tailleY)
-                            {
-                                estOrigine = false;
-                                break;
-                            }
-
-                            if (terrain.Cases[cy, cx].Plante != plante)
-                            {
-                                estOrigine = false;
-                                break;
-                            }
-                        }
-
-                        if (!estOrigine) continue;
-
-                        // Récolte
-                        string nom = plante.GetType().Name.ToLower();
-                        int quantite = plante.Occupation.Count;
-
-                        inventaire.AjouterObjet(nom, quantite);
-
-                        if (recoltes.ContainsKey(nom))
-                            recoltes[nom] += quantite;
-                        else
-                            recoltes[nom] = quantite;
-
-                        plantesDejaRecoltees.Add(plante);
-
-                        // Supprimer la plante de toutes ses cases
-                        foreach (var (dx, dy) in plante.Occupation)
-                        {
-                            int cx = x + dx;
-                            int cy = y + dy;
-
-                            terrain.Cases[cy, cx].Plante = null;
-                        }
+                        estOrigine = false;
+                        break;
                     }
                 }
+                if (!estOrigine) 
+                    continue;
+
+                // -- Récolte --
+                string key = plante.GetType().Name.ToLower();
+                int qte = plante.Occupation.Count;
+
+                inventaire.AjouterObjet(key, qte);
+                if (recoltes.ContainsKey(key)) 
+                    recoltes[key] += qte;
+                else 
+                    recoltes[key]  = qte;
+
+                plantesDejaRecoltees.Add(plante);
+
+                // -- Gestion de la repousse / disparition --
+                bool repousse = plante.Recolter();
+                if (!repousse)
+                {
+                    // Supprimer définitivement: on efface toutes les cases occupées
+                    foreach (var (dx, dy) in plante.Occupation)
+                    {
+                        int cx = x + dx, cy = y + dy;
+                        terrain.Cases[cy, cx].Plante = null;
+                    }
+                }
+                // sinon la plante reste, dans sa nouvelle phase « En croissance »
             }
         }
 
         return recoltes;
     }
+
 }
 
 public class JardinCurseur

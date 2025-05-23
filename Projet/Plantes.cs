@@ -2,6 +2,7 @@ public abstract class Plantes
 {
     public string Nom { get; set; }
     public bool Vivacite { get; set; }
+    public int CyclesRestants { get; private set; }
     public bool Comestible { get; set; }
     public string[] SaisonsDeSemis { get; set; }
     public string TerrainPrefere { get; set; }
@@ -16,7 +17,6 @@ public abstract class Plantes
 
     // Attributs de croissance
     public string Phase { get; set; } = "Graine";
-    public int PhaseActuelle { get; set; }  // index de la phase courante
     public int NombrePhases { get; set; } // nombre total de phases
     public int JoursDepuisSemis { get; set; } = 0;
 
@@ -26,14 +26,20 @@ public abstract class Plantes
     // Pour savoir si la plante est mature
     public bool EstMature => Phase == "Mature";
 
-    public Plantes()
+    protected void InitCycles()
+    {
+        if (JoursPourMaturité > 0)
+        CyclesRestants = Math.Max(1, EsperanceDeVie / JoursPourMaturité);
+        else
+        CyclesRestants = 1;
+    }
+
+    protected Plantes()
     {
         JoursDepuisSemis = 0;
         Phase = "Graine";
         NiveauHydratation = 0;
     }
-
-    
 
     public virtual string Croissance
     {
@@ -44,7 +50,7 @@ public abstract class Plantes
                 "Graine" => ".",
                 "Jeune pousse" => "🌱",
                 "En croissance" => "🎋",
-                "Mature" => "🌿", 
+                "Mature" => "🌿",
                 "Morte" => "x",
                 _ => "?"
             };
@@ -57,9 +63,9 @@ public abstract class Plantes
         if (Phase == "Morte")
             return;
 
-  // 1) Vérif. température extrême
-  if (meteo.Temperature < TemperaturePreferee.min - 5 || meteo.Temperature > TemperaturePreferee.max + 5)
-    return;
+        // 1) Vérif. température extrême
+        if (meteo.Temperature < TemperaturePreferee.min - 5 || meteo.Temperature > TemperaturePreferee.max + 5)
+            return;
 
         // 2) Hydratation hors-limits sans pluie → pas de croissance
         if (NiveauHydratation < EauHebdomadaire
@@ -81,13 +87,27 @@ public abstract class Plantes
         else if (JoursDepuisSemis >= JoursPourMaturité * 2 / 3) Phase = "En croissance";
         else if (JoursDepuisSemis >= JoursPourMaturité / 3) Phase = "Jeune pousse";
         else Phase = "Graine";
-        
+
     }
 
 
     public void Arroser()
     {
         NiveauHydratation += 20;
+    }
+    
+        public bool Recolter()
+    {
+        if (!Vivacite)
+            return false;
+
+        // vivace :
+        CyclesRestants--;
+        if (CyclesRestants <= 0)
+            return false; 
+        Phase = "En croissance";
+        JoursDepuisSemis = JoursPourMaturité * 2 / 3;
+        return true;
     }
 
 }
@@ -110,6 +130,7 @@ public class Tomate : Plantes
         EsperanceDeVie = 120;
         NombrePhases = 4; // Graine, Jeune pousse, En croissance, Mature
         NiveauHydratation = 0;
+        InitCycles();
     }
 
 
@@ -152,6 +173,7 @@ public class Mangue : Plantes
         Couleur = ConsoleColor.Yellow;
         NombrePhases = 4; // Graine, Jeune pousse, En croissance, Mature
         NiveauHydratation = 0;
+        InitCycles();
     }
 
     public override List<(int dx, int dy)> Occupation => new List<(int, int)>
@@ -191,6 +213,7 @@ public class Aubergine : Plantes
         Couleur = ConsoleColor.DarkMagenta;
         NombrePhases = 4; // Graine, Jeune pousse, En croissance, Mature
         NiveauHydratation = 0;
+        InitCycles();
     }
 
     public override List<(int dx, int dy)> Occupation => new List<(int, int)>
@@ -228,6 +251,7 @@ public class The : Plantes
         Couleur = ConsoleColor.Green;
         NombrePhases = 4; // Graine, Jeune pousse, En croissance, Mature
         NiveauHydratation = 0;
+        InitCycles();
     }
 
     public override List<(int dx, int dy)> Occupation => new List<(int, int)>
@@ -264,6 +288,7 @@ public class Hibiscus : Plantes
         Couleur = ConsoleColor.DarkRed;
         NombrePhases = 4; // Graine, Jeune pousse, En croissance, Mature
         NiveauHydratation = 0;
+        InitCycles();
     }
 
     public override List<(int dx, int dy)> Occupation => new List<(int, int)>
