@@ -71,17 +71,17 @@ public class Accueil
         Meteo meteo = new Meteo();
         Jardin jardin = new Jardin(meteo);
         JardinCurseur curseur = new JardinCurseur(jardin);
-        Inventaire inventaire = new Inventaire();
+        Joueur joueur = new Joueur();
         Urgence Urgence = new Urgence(jardin, curseur);
 
 
         // Ajouter des objets à l'inventaire
-        inventaire.AjouterObjet("Arrosoir", 1);
-        inventaire.AjouterObjet("graine de tomate", 5);
-        inventaire.AjouterObjet("graine de aubergine", 3);
-        inventaire.AjouterObjet("graine de mangue", 3);
-        inventaire.AjouterObjet("graine de thé", 3);
-        inventaire.AjouterObjet("graine de hibiscus", 3);
+        joueur.Inventaire.AjouterObjet("Arrosoir", 1);
+        joueur.Inventaire.AjouterObjet("graine de tomate", 5);
+        joueur.Inventaire.AjouterObjet("graine de aubergine", 3);
+        joueur.Inventaire.AjouterObjet("graine de mangue", 3);
+        joueur.Inventaire.AjouterObjet("graine de thé", 3);
+        joueur.Inventaire.AjouterObjet("graine de hibiscus", 3);
 
         Random rnd = new Random();
         for (int semaine = 1; semaine <= 15; semaine++)
@@ -113,7 +113,7 @@ public class Accueil
 
                 Console.WriteLine();
 
-                inventaire.Afficher();
+                joueur.Inventaire.Afficher();
 
 
 
@@ -126,6 +126,7 @@ public class Accueil
                 Console.WriteLine("3. Récolter des plantes");
                 Console.WriteLine("4. Passer à la semaine suivante");
                 Console.WriteLine("5. Retour à l'accueil (⚠ progression perdue)");
+                Console.WriteLine("6. Accéder à la boutique 🛒");
                 Console.Write("Choix : ");
                 Console.ResetColor();
 
@@ -170,7 +171,7 @@ public class Accueil
                             Console.WriteLine("🌱 Vous avez choisi de semer une graine !");
                             Console.WriteLine("\nVoici votre inventaire de graines :\n");
 
-                            var graines = inventaire.Objets.Where(o => o.Nom.Contains("graine")).ToList();
+                            var graines = joueur.Inventaire.Objets.Where(o => o.Nom.Contains("graine")).ToList();
 
                             if (graines.Count == 0)
                             {
@@ -223,7 +224,7 @@ public class Accueil
                                     // Planter
                                     curseur.Planter(planteChoisie);
 
-                                    if (inventaire.SemerGraine(graineChoisie.Nom))
+                                    if (joueur.Inventaire.SemerGraine(graineChoisie.Nom))
                                     {
                                         Console.ForegroundColor = ConsoleColor.Green;
                                         Console.WriteLine($"\n✅ {planteChoisie.Nom} plantée avec succès !");
@@ -248,7 +249,7 @@ public class Accueil
                         break;
 
                     case ConsoleKey.D3:
-                        var recoltes = jardin.InventaireRecoltes(inventaire);
+                        var recoltes = jardin.InventaireRecoltes(joueur.Inventaire);
                         if (recoltes.Count == 0)
                         {
                             Console.WriteLine("🌾 Aucune plante n'est prête à être récoltée.");
@@ -306,7 +307,10 @@ public class Accueil
                                 Console.WriteLine("\nAction annulée. Retour au jeu.");
                                 Thread.Sleep(1000);
                             }
-                            break;
+                        break;
+                    case ConsoleKey.D6:
+                            Boutique(joueur);
+                        break;
                 }
                 Console.WriteLine("\nAppuie sur une touche pour continuer...");
                 Console.ReadKey();
@@ -334,6 +338,126 @@ public class Accueil
                 plante.NiveauHydratation += 10;
         }
      }
+
+    public void Boutique(Joueur joueur)
+    {
+        bool quitter = false;
+
+        while (!quitter)
+        {
+            Console.Clear();
+            Console.WriteLine("🛒 Bienvenue à la boutique !");
+            Console.WriteLine($"💰 Votre argent : {joueur.Argent} pièces\n");
+
+            Console.WriteLine("1. Acheter");
+            Console.WriteLine("2. Vendre");
+            Console.WriteLine("3. Revenir au jeu");
+
+            Console.Write("\nVotre choix : ");
+            var choix = Console.ReadKey().Key;
+            Console.WriteLine();
+
+            switch (choix)
+            {
+                case ConsoleKey.D1:
+                    Acheter(joueur);
+                    break;
+                case ConsoleKey.D2:
+                    Vendre(joueur);
+                    break;
+                case ConsoleKey.D3:
+                    quitter = true;
+                    break;
+                default:
+                    Console.WriteLine("Choix invalide.");
+                    Console.ReadKey();
+                    break;
+            }
+        }
+    }
+
+    public void Acheter(Joueur joueur)
+    {
+        var catalogue = new Dictionary<string, int>
+        {
+            { "graine de tomate", 5 },
+            { "graine de aubergine", 6 },
+            { "graine de mangue", 10 },
+            { "graine de hibiscus", 7 },
+            { "graine de thé", 8 }
+        };
+
+        Console.Clear();
+        Console.WriteLine("🛍️ Acheter des graines :\n");
+        Console.WriteLine($"💰 Votre argent : {joueur.Argent} pièces\n");
+
+        int i = 1;
+        foreach (var item in catalogue)
+        {
+            Console.WriteLine($"{i++}. {item.Key} - {item.Value} pièces");
+        }
+        Console.WriteLine($"{i}. Retour");
+
+        Console.Write("\nChoisissez un article (numéro) : ");
+        if (int.TryParse(Console.ReadLine(), out int choix) && choix > 0 && choix < i)
+        {
+            var selected = catalogue.ElementAt(choix - 1);
+            if (joueur.DepenserArgent(selected.Value))
+            {
+                joueur.Inventaire.AjouterObjet(selected.Key, 1);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($" Vous avez acheté 1 {selected.Key} !");
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(" Pas assez d'argent !");
+            }
+        }
+
+        Console.ResetColor();
+        Console.WriteLine("\nAppuyez sur une touche pour continuer...");
+        Console.ReadKey();
+    }
+
+    public void Vendre(Joueur joueur)
+    {
+        Console.Clear();
+        Console.WriteLine("💼 Vendre des objets de votre inventaire :\n");
+
+        var vendables = joueur.Inventaire.Objets
+            .Where(o => !o.Nom.Contains("graine"))
+            .ToList();
+
+        if (vendables.Count == 0)
+        {
+            Console.WriteLine("Vous n'avez rien à vendre.");
+            Console.ReadKey();
+            return;
+        }
+
+        for (int i = 0; i < vendables.Count; i++)
+        {
+            Console.WriteLine($"{i + 1}. {vendables[i].Nom} x{vendables[i].Quantite}");
+        }
+        Console.WriteLine($"{vendables.Count + 1}. Retour");
+
+        Console.Write("\nChoisissez un article à vendre (numéro) : ");
+        if (int.TryParse(Console.ReadLine(), out int choix) && choix > 0 && choix <= vendables.Count)
+        {
+            var item = vendables[choix - 1];
+            int prix = 4;
+            if (joueur.Inventaire.UtiliserObjet(item.Nom))
+            {
+                joueur.AjouterArgent(prix);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"✅ Vous avez vendu 1 {item.Nom} pour {prix} pièces.");
+            }
+        }
+        Console.ResetColor();
+        Console.WriteLine("\nAppuyez sur une touche pour continuer...");
+        Console.ReadKey();
+    }
 
     
     
