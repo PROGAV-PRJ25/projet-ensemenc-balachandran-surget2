@@ -216,7 +216,7 @@ public class Urgence
             {
                 for (int j = 0; j < terrain.Cases.GetLength(1); j++)
                 {
-                    terrain.Cases[i, j].Plante = null;
+                    terrain.Cases[i, j].Plante = null!;
                 }
             }
         }
