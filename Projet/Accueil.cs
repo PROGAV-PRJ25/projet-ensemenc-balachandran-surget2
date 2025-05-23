@@ -471,7 +471,7 @@ public class Accueil
 
         Console.WriteLine("2. Potager et terrains");
         Console.WriteLine("   • Grille de 2×3 terrains, chacun de 3×3 cases.");
-        Console.WriteLine("   • 2 terrains de chaque type : Sable, Terre, Argile.");
+        Console.WriteLine("   • 2 terrains de chaque type : Sable (Jaune), Terre (Vert), Argile (Gris).");
         Console.WriteLine();
 
         Console.WriteLine("3. Plantes et semis");
