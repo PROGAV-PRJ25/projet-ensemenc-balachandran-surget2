@@ -280,7 +280,7 @@ public class Accueil
                                 BaisserHydratationPlantes(jardin);
 
                                 // URGENCE
-                                if (rnd.Next(1, 4) == 1) // 1 chance sur 4
+                                if (rnd.Next(1, 7) == 1) // 1 chance sur 7
                                 {
                                     Urgence.AfficherPageUrgence();
                                     Urgence.Elephant();
