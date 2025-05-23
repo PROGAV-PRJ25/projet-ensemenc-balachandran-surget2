@@ -70,8 +70,10 @@ public class Urgence
             {
                 Console.Clear();
                 AnimationElephant(_jardin);
+                ClearAllPlants();
+                _curseur.Afficher();
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("\nLes éléphant se sont énervés ! Ils ont tout piétiné ");
+                Console.WriteLine("\n🐘💥 Les éléphant se sont énervés ! Ils ont tout piétiné ");
                 Console.ResetColor();
 
             }
@@ -83,25 +85,25 @@ public class Urgence
             // Supprimer aléatoirement quelques plantes (par ex. 25 à 50 % des plantes existantes)
             var plantesMap = new Dictionary<Plantes, List<(int tx, int ty, int i, int j)>>();
             for (int tx = 0; tx < 2; tx++)
-            for (int ty = 0; ty < 3; ty++)
-            for (int i = 0; i < 3; i++)
-            for (int j = 0; j < 3; j++)
-            {
-                var plante = _jardin.Terrains[tx, ty].Cases[i, j].Plante;
-                if (plante != null)
-                {
-                    if (!plantesMap.TryGetValue(plante, out var list))
-                    {
-                        list = new List<(int, int, int, int)>();
-                        plantesMap[plante] = list;
-                    }
-                    list.Add((tx, ty, i, j));
-                }
-            }
+                for (int ty = 0; ty < 3; ty++)
+                    for (int i = 0; i < 3; i++)
+                        for (int j = 0; j < 3; j++)
+                        {
+                            var plante = _jardin.Terrains[tx, ty].Cases[i, j].Plante;
+                            if (plante != null)
+                            {
+                                if (!plantesMap.TryGetValue(plante, out var list))
+                                {
+                                    list = new List<(int, int, int, int)>();
+                                    plantesMap[plante] = list;
+                                }
+                                list.Add((tx, ty, i, j));
+                            }
+                        }
 
             var toutesPlantes = plantesMap.Keys.ToList();
             int totalInstances = toutesPlantes.Count;
-            int aSupprimer = rnd.Next(totalInstances/4, totalInstances/2 + 1);
+            int aSupprimer = rnd.Next(totalInstances / 4, totalInstances / 2 + 1);
 
             var plantesPiétinées = toutesPlantes
                 .OrderBy(_ => rnd.Next())
@@ -202,6 +204,25 @@ public class Urgence
 
         Console.ForegroundColor = ConsoleColor.DarkGray;
     }
+    
+    private void ClearAllPlants()
+{
+    for (int tx = 0; tx < _jardin.Terrains.GetLength(0); tx++)
+    {
+        for (int ty = 0; ty < _jardin.Terrains.GetLength(1); ty++)
+        {
+            var terrain = _jardin.Terrains[tx, ty];
+            for (int i = 0; i < terrain.Cases.GetLength(0); i++)
+            {
+                for (int j = 0; j < terrain.Cases.GetLength(1); j++)
+                {
+                    terrain.Cases[i, j].Plante = null;
+                }
+            }
+        }
+    }
+}
+
 
 }
 
