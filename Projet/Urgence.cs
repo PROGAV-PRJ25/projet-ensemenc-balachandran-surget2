@@ -112,7 +112,7 @@ public class Urgence
             {
                 foreach (var (tx, ty, i, j) in plantesMap[plante])
                 {
-                    _jardin.Terrains[tx, ty].Cases[i, j].Plante = null;
+                    _jardin.Terrains[tx, ty].Cases[i, j].Plante = null!;
                 }
             }
 
@@ -173,7 +173,7 @@ public class Urgence
 
                                         if (cx >= 0 && cx < 3 && cy >= 0 && cy < 3)
                                         {
-                                            jardin.Terrains[tx, ty].Cases[cy, cx].Plante = null;
+                                            jardin.Terrains[tx, ty].Cases[cy, cx].Plante = null!;
                                         }
                                     }
                                 }

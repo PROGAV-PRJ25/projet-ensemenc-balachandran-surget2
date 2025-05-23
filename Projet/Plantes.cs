@@ -1,16 +1,16 @@
 public abstract class Plantes
 {
-    public string Nom { get; set; }
+    public string Nom { get; set; } = default!;
     public bool Vivacite { get; set; }
     public int CyclesRestants { get; private set; }
     public bool Comestible { get; set; }
-    public string[] SaisonsDeSemis { get; set; }
-    public string TerrainPrefere { get; set; }
+    public string[] SaisonsDeSemis { get; set; } = default!;
+    public string TerrainPrefere { get; set; } = default!;
     public abstract List<(int dx, int dy)> Occupation { get; }
     public int NiveauHydratation { get; set; }
     public int JoursPourMaturité { get; set; }
     public int EauHebdomadaire { get; set; }
-    public string Lumiere { get; set; }
+
     public (int min, int max) TemperaturePreferee { get; set; }
     public int EsperanceDeVie { get; set; }
     public ConsoleColor Couleur { get; set; }
@@ -125,7 +125,6 @@ public class Tomate : Plantes
         TerrainPrefere = "Terre";
         JoursPourMaturité = 60;
         EauHebdomadaire = 25;
-        Lumiere = "Plein Soleil";
         TemperaturePreferee = (20, 30);
         EsperanceDeVie = 120;
         NombrePhases = 4; // Graine, Jeune pousse, En croissance, Mature
@@ -167,7 +166,6 @@ public class Mangue : Plantes
         TerrainPrefere = "Terre";
         JoursPourMaturité = 180;
         EauHebdomadaire = 20;
-        Lumiere = "Plein Soleil";
         TemperaturePreferee = (25, 35);
         EsperanceDeVie = 3650;
         Couleur = ConsoleColor.Yellow;
@@ -207,7 +205,6 @@ public class Aubergine : Plantes
         TerrainPrefere = "Argile";
         JoursPourMaturité = 70;
         EauHebdomadaire = 30;
-        Lumiere = "Plein Soleil";
         TemperaturePreferee = (22, 30);
         EsperanceDeVie = 120;
         Couleur = ConsoleColor.DarkMagenta;
@@ -245,7 +242,6 @@ public class The : Plantes
         TerrainPrefere = "Argile";
         JoursPourMaturité = 365;
         EauHebdomadaire = 35;
-        Lumiere = "Mi-ombre";
         TemperaturePreferee = (22, 28);
         EsperanceDeVie = 1825;
         Couleur = ConsoleColor.Green;
@@ -282,7 +278,6 @@ public class Hibiscus : Plantes
         TerrainPrefere = "Sable";
         JoursPourMaturité = 90;
         EauHebdomadaire = 40;
-        Lumiere = "Plein Soleil";
         TemperaturePreferee = (23, 35);
         EsperanceDeVie = 1000;
         Couleur = ConsoleColor.DarkRed;

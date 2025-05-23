@@ -1,6 +1,6 @@
 public class Case
 {
-    public Plantes Plante { get; set; }
+    public Plantes Plante { get; set; } = default!;
 
     public string Afficher()
     {
@@ -146,7 +146,7 @@ public class Jardin
                     foreach (var (dx, dy) in plante.Occupation)
                     {
                         int cx = x + dx, cy = y + dy;
-                        terrain.Cases[cy, cx].Plante = null;
+                        terrain.Cases[cy, cx].Plante = null!;
                     }
                 }
                 // sinon la plante reste, dans sa nouvelle phase « En croissance »
