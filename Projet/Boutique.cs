@@ -7,12 +7,19 @@ public class Boutique
         while (!quitter)
         {
             Console.Clear();
-            Console.WriteLine("🛒 Bienvenue à la boutique !");
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("╔════════════════════════════════════╗");
+            Console.WriteLine("║          🛒  BOUTIQUE DU JEU       ║");
+            Console.WriteLine("╚════════════════════════════════════╝");
+            Console.ResetColor();
+
             Console.WriteLine($"💰 Votre argent : {joueur.Argent} pièces\n");
 
-            Console.WriteLine("1. Acheter");
-            Console.WriteLine("2. Vendre");
-            Console.WriteLine("3. Revenir au jeu");
+            Console.WriteLine("Que souhaitez-vous faire ?");
+            Console.WriteLine("1️⃣ Acheter");
+            Console.WriteLine("2️⃣ Vendre");
+            Console.WriteLine("3️⃣ ↩ Revenir au jeu");
 
             Console.Write("\nVotre choix : ");
             var choix = Console.ReadKey().Key;
@@ -30,7 +37,9 @@ public class Boutique
                     quitter = true;
                     break;
                 default:
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Choix invalide.");
+                    Console.ResetColor();
                     Console.ReadKey();
                     break;
             }
@@ -49,7 +58,12 @@ public class Boutique
         };
 
         Console.Clear();
-        Console.WriteLine("🛍️ Acheter des graines :\n");
+        Console.ForegroundColor = ConsoleColor.Cyan;
+        Console.WriteLine("╔════════════════════════════════╗");
+        Console.WriteLine("║        🛍️  ACHAT DE GRAINES    ║");
+        Console.WriteLine("╚════════════════════════════════╝");
+        Console.ResetColor();
+        
         Console.WriteLine($"💰 Votre argent : {joueur.Argent} pièces\n");
 
         int i = 1;
@@ -75,6 +89,10 @@ public class Boutique
                 Console.WriteLine(" Pas assez d'argent !");
             }
         }
+        else
+        {
+            Console.WriteLine("\n↩ Retour à la boutique...");
+        }
 
         Console.ResetColor();
         Console.WriteLine("\nAppuyez sur une touche pour continuer...");
@@ -84,15 +102,21 @@ public class Boutique
     public void Vendre(Joueur joueur)
     {
         Console.Clear();
-        Console.WriteLine("💼 Vendre des objets de votre inventaire :\n");
+        Console.ForegroundColor = ConsoleColor.Cyan;
+        Console.WriteLine("╔═════════════════════════════════╗");
+        Console.WriteLine("║       💼  VENTE DE RÉCOLTES     ║");
+        Console.WriteLine("╚═════════════════════════════════╝");
+        Console.ResetColor();
 
         var vendables = joueur.Inventaire.Objets
-            .Where(o => !o.Nom.Contains("graine"))
+            .Where(o => !o.Nom.Contains("graine")) // Le joueur ne peut pas vendre de graines
             .ToList();
 
         if (vendables.Count == 0)
         {
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("Vous n'avez rien à vendre.");
+            Console.ResetColor();
             Console.ReadKey();
             return;
         }
@@ -109,20 +133,42 @@ public class Boutique
             var item = vendables[choix - 1];
             int prix = item.Nom switch
             {
-                "tomate" => 3,
-                "aubergine" => 4,
-                "mangue" => 8,
-                "hibiscus" => 6,
-                "thé" => 10,
+                "tomate" => 4,
+                "aubergine" => 2,
+                "mangue" => 1,
+                "hibiscus" => 5,
+                "thé" => 7,
                 _ => 2 // par défaut
             };
-            if (joueur.Inventaire.UtiliserObjet(item.Nom))
+            
+            Console.Write($"📦 Combien de {item.Nom} souhaitez-vous vendre ? (Max {item.Quantite}) : ");
+
+            if (int.TryParse(Console.ReadLine(), out int quantiteAVendre) &&
+                quantiteAVendre > 0 &&
+                quantiteAVendre <= item.Quantite)
             {
-                joueur.AjouterArgent(prix);
+                for (int i = 0; i < quantiteAVendre; i++)
+                {
+                    joueur.Inventaire.UtiliserObjet(item.Nom);
+                }
+
+                int total = prix * quantiteAVendre;
+                joueur.AjouterArgent(total);
+
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"✅ Vous avez vendu 1 {item.Nom} pour {prix} pièces.");
+                Console.WriteLine($"\nVous avez vendu {quantiteAVendre} {item.Nom}(s) pour {total} pièces.");
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Quantité invalide.");
             }
         }
+        else
+        {
+            Console.WriteLine("\n↩ Retour à la boutique...");
+        }
+
         Console.ResetColor();
         Console.WriteLine("\nAppuyez sur une touche pour continuer...");
         Console.ReadKey();
