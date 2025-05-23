@@ -382,30 +382,30 @@ public class Accueil
 
     public void GenererMeteo(Meteo meteo, string saison, Random rnd)
     {
-        int tMin, tMax, hMin, hMax, vMin, vMax;
+        int tMin, tMax, hMin, hMax, vMin, vMax; //température min max, humidité min max, vent min max
         Dictionary<string, int> proba;
 
         switch (saison)
         {
             case "Printemps":
-                tMin = 10; tMax = 20; hMin = 50; hMax = 70; vMin = 5; vMax = 15;
-                proba = new() { ["Ensoleillé"] = 50, ["Nuageux"] = 30, ["Pluie"] = 20 };
+                tMin = 28; tMax = 33; hMin = 75; hMax = 90; vMin = 5; vMax = 15;
+                proba = new() { ["Ensoleillé"] = 20, ["Nuageux"] = 40, ["Pluie"] = 40 };
                 break;
             case "Été":
-                tMin = 25; tMax = 35; hMin = 60; hMax = 80; vMin = 5; vMax = 20;
-                proba = new() { ["Ensoleillé"] = 60, ["Nuageux"] = 20, ["Pluie"] = 20 };
+                tMin = 27; tMax = 31; hMin = 80; hMax = 95; vMin = 15; vMax = 25;
+                proba = new() { ["Ensoleillé"] = 50, ["Nuageux"] = 20, ["Pluie"] = 30 };
                 break;
             case "Automne":
-                tMin = 10; tMax = 20; hMin = 40; hMax = 60; vMin = 5; vMax = 15;
-                proba = new() { ["Ensoleillé"] = 40, ["Nuageux"] = 40, ["Pluie"] = 20 };
+                tMin = 27; tMax = 32; hMin = 75; hMax = 90; vMin = 10; vMax = 20;
+                proba = new() { ["Ensoleillé"] = 20, ["Nuageux"] = 40, ["Pluie"] = 40 };
                 break;
             case "Hiver":
-                tMin = 0; tMax = 10; hMin = 30; hMax = 50; vMin = 10; vMax = 25;
+                tMin = 25; tMax = 30; hMin = 70; hMax = 85; vMin = 10; vMax = 20;
                 proba = new() { ["Ensoleillé"] = 30, ["Nuageux"] = 50, ["Pluie"] = 20 };
                 break;
             default:
                 tMin = 20; tMax = 30; hMin = 50; hMax = 70; vMin = 5; vMax = 20;
-                proba = new() { ["Ensoleillé"] = 50, ["Nuageux"] = 30, ["Pluie"] = 20 };
+                proba = new() { ["Ensoleillé"] = 20, ["Nuageux"] = 40, ["Pluie"] = 40 };
                 break;
         }
 
