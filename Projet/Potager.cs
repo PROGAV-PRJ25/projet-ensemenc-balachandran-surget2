@@ -62,16 +62,16 @@ public class Jardin
 
     public void ToutPousser(Meteo meteo, string saison, int jours = 1)
     {
-            foreach (var terrain in Terrains)
+        foreach (var terrain in Terrains)
+        {
+            foreach (var c in terrain.Cases)
             {
-                foreach (var c in terrain.Cases)
+                if (c.Plante != null)
                 {
-                    if (c.Plante != null)
-                    {
-                        c.Plante.Grandir(meteo, saison, terrain.Type, jours);
-                    }
+                    c.Plante.Grandir(meteo, saison, terrain.Type, jours);
                 }
             }
+        }
     }
 
     public List<Plantes> ObtenirToutesLesPlantes()
@@ -104,56 +104,75 @@ public class Jardin
             int hauteur = terrain.Cases.GetLength(0);
 
             for (int y = 0; y < hauteur; y++)
-            for (int x = 0; x < largeur; x++)
-            {
-                var plante = terrain.Cases[y, x].Plante;
-                if (plante == null  || !plante.EstMature || plantesDejaRecoltees.Contains(plante))
-                    continue;
-
-                // On ne récolte qu'à partir de l'origine de la plante
-                bool estOrigine = true;
-                foreach (var (dx, dy) in plante.Occupation)
+                for (int x = 0; x < largeur; x++)
                 {
-                    int cx = x + dx, cy = y + dy;
-                    if (cx < 0 || cx >= largeur 
-                    || cy < 0 || cy >= hauteur
-                    || terrain.Cases[cy, cx].Plante != plante)
-                    {
-                        estOrigine = false;
-                        break;
-                    }
-                }
-                if (!estOrigine) 
-                    continue;
+                    var plante = terrain.Cases[y, x].Plante;
+                    if (plante == null || !plante.EstMature || plantesDejaRecoltees.Contains(plante))
+                        continue;
 
-                // -- Récolte --
-                string key = plante.GetType().Name.ToLower();
-                int qte = plante.Occupation.Count;
-
-                inventaire.AjouterObjet(key, qte);
-                if (recoltes.ContainsKey(key)) 
-                    recoltes[key] += qte;
-                else 
-                    recoltes[key]  = qte;
-
-                plantesDejaRecoltees.Add(plante);
-
-                // -- Gestion de la repousse / disparition --
-                bool repousse = plante.Recolter();
-                if (!repousse)
-                {
-                    // Supprimer définitivement: on efface toutes les cases occupées
+                    // On ne récolte qu'à partir de l'origine de la plante
+                    bool estOrigine = true;
                     foreach (var (dx, dy) in plante.Occupation)
                     {
                         int cx = x + dx, cy = y + dy;
-                        terrain.Cases[cy, cx].Plante = null!;
+                        if (cx < 0 || cx >= largeur
+                        || cy < 0 || cy >= hauteur
+                        || terrain.Cases[cy, cx].Plante != plante)
+                        {
+                            estOrigine = false;
+                            break;
+                        }
                     }
+                    if (!estOrigine)
+                        continue;
+
+                    // -- Récolte --
+                    string key = plante.GetType().Name.ToLower();
+                    int qte = plante.Occupation.Count;
+
+                    inventaire.AjouterObjet(key, qte);
+                    if (recoltes.ContainsKey(key))
+                        recoltes[key] += qte;
+                    else
+                        recoltes[key] = qte;
+
+                    plantesDejaRecoltees.Add(plante);
+
+                    // -- Gestion de la repousse / disparition --
+                    bool repousse = plante.Recolter();
+                    if (!repousse)
+                    {
+                        // Supprimer définitivement: on efface toutes les cases occupées
+                        foreach (var (dx, dy) in plante.Occupation)
+                        {
+                            int cx = x + dx, cy = y + dy;
+                            terrain.Cases[cy, cx].Plante = null!;
+                        }
+                    }
+                    // sinon la plante reste, dans sa nouvelle phase « En croissance »
                 }
-                // sinon la plante reste, dans sa nouvelle phase « En croissance »
-            }
         }
 
         return recoltes;
+    }
+    
+        public void NettoyerPlantesMortes()
+    {
+        foreach (var terrain in Terrains)
+        {
+            int h = terrain.Cases.GetLength(0), w = terrain.Cases.GetLength(1);
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    var c = terrain.Cases[y, x];
+                    if (c.Plante != null && c.Plante.Phase == "Morte")
+                    {
+                        c.Plante = null!;
+                    }
+                }
+            }
+        }
     }
 
 }

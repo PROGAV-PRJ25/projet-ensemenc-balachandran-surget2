@@ -275,6 +275,7 @@ public class Accueil
 
                     case ConsoleKey.D3:
                         var recoltes = jardin.InventaireRecoltes(joueur.Inventaire);
+                        jardin.NettoyerPlantesMortes();
                         if (recoltes.Count == 0)
                         {
                             Console.WriteLine("🌾 Aucune plante n'est prête à être récoltée.");
