@@ -58,38 +58,57 @@ public abstract class Plantes
     }
 
     // Croissance gérée ici pour toutes les plantes
-    public void Grandir(Meteo meteo, int jours)
+public void Grandir(Meteo meteo, string saison, TypeTerrain terrainCourant, int jours)
+{
+    if (Phase == "Morte") 
     {
-        if (Phase == "Morte")
-            return;
-
-        // 1) Vérif. température extrême
-        if (meteo.Temperature < TemperaturePreferee.min - 5 || meteo.Temperature > TemperaturePreferee.max + 5)
-            return;
-
-        // 2) Hydratation hors-limits sans pluie → pas de croissance
-        if (NiveauHydratation < EauHebdomadaire
-            || NiveauHydratation > EauHebdomadaire * 2)
-        {
-            return;
-        }
-
-        // Facteur pluie
-        int facteurPluie = meteo.Condition.Equals("Pluie", StringComparison.OrdinalIgnoreCase) ? 2 : 1;
-
-        // Croissance cumulée
-        int croissanceTotale = jours * facteurPluie;
-        JoursDepuisSemis += croissanceTotale;
-
-        // Phases
-        if (JoursDepuisSemis >= EsperanceDeVie) Phase = "Morte";
-        else if (JoursDepuisSemis >= JoursPourMaturité) Phase = "Mature";
-        else if (JoursDepuisSemis >= JoursPourMaturité * 2 / 3) Phase = "En croissance";
-        else if (JoursDepuisSemis >= JoursPourMaturité / 3) Phase = "Jeune pousse";
-        else Phase = "Graine";
-
+        return;
     }
 
+    // 1) Température extrême → pas de croissance
+    if (meteo.Temperature < TemperaturePreferee.min - 5 || meteo.Temperature > TemperaturePreferee.max + 5)
+    {
+        return;
+    }
+        
+    // 2) Hydratation hors-limits → pas de croissance
+    if (NiveauHydratation < EauHebdomadaire || NiveauHydratation > EauHebdomadaire * 2)
+    {
+        return;
+    }
+
+    // pluie
+        int facteurPluie = meteo.Condition.Equals("Pluie", StringComparison.OrdinalIgnoreCase) ? 2 : 1;
+
+    //  saison
+        float facteurSaison = SaisonsDeSemis
+        .Contains(saison, StringComparer.OrdinalIgnoreCase)
+        ? 1.2f    // +20 % si bon moment de semis
+        : 0.8f;   // –20 % sinon
+
+    // terrain
+    float facteurTerrain = string.Equals(
+            TerrainPrefere, 
+            terrainCourant.ToString(), 
+            StringComparison.OrdinalIgnoreCase)
+        ? 1.2f    // +20 % sur sol préféré
+        : 0.9f;   // –10 % sinon
+
+    // croissance
+    float croissanceBrute = jours * facteurPluie * facteurSaison * facteurTerrain;
+    int croissanceTotale = Math.Max(0, (int)Math.Round(croissanceBrute));
+    JoursDepuisSemis += croissanceTotale;
+
+    // Évaporation
+    NiveauHydratation = Math.Max(0, NiveauHydratation - (EauHebdomadaire * jours / 7));
+
+    // Phases
+    if      (JoursDepuisSemis >= EsperanceDeVie)                 Phase = "Morte";
+    else if (JoursDepuisSemis >= JoursPourMaturité)               Phase = "Mature";
+    else if (JoursDepuisSemis >= JoursPourMaturité * 2 / 3)     Phase = "En croissance";
+    else if (JoursDepuisSemis >= JoursPourMaturité / 3)           Phase = "Jeune pousse";
+    else                                                          Phase = "Graine";
+}
 
     public void Arroser()
     {
