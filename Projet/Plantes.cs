@@ -63,11 +63,11 @@ public abstract class Plantes
         if (Phase == "Morte")
             return;
 
-        // 1) Vérif. température extrême
+        // Vérif. des températures extrêmes
         if (meteo.Temperature < TemperaturePreferee.min - 5 || meteo.Temperature > TemperaturePreferee.max + 5)
             return;
 
-        // 2) Hydratation hors-limits sans pluie → pas de croissance
+        // Hydratation hors-limites sans pluie → pas de croissance
         if (NiveauHydratation < EauHebdomadaire
             || NiveauHydratation > EauHebdomadaire * 2)
         {
@@ -96,7 +96,7 @@ public abstract class Plantes
         NiveauHydratation += 20;
     }
     
-        public bool Recolter()
+    public bool Recolter()
     {
         if (!Vivacite)
             return false;
@@ -111,6 +111,8 @@ public abstract class Plantes
     }
 
 }
+
+
 
 
 public class Tomate : Plantes
