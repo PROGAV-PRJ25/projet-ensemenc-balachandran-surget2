@@ -280,7 +280,7 @@ public class Accueil
                                 BaisserHydratationPlantes(jardin);
 
                                 // URGENCE
-                                if (rnd.Next(1, 4) == 1)
+                                if (rnd.Next(1, 4) == 1) // 1 chance sur 4
                                 {
                                     Urgence.AfficherPageUrgence();
                                     Urgence.Elephant();
@@ -333,7 +333,7 @@ public class Accueil
                     AfficherPageAccueil();
                     return; // sort de Jouer()
                 }
-                
+
                 Console.WriteLine("\nAppuie sur une touche pour continuer...");
                 Console.ReadKey();
             }
