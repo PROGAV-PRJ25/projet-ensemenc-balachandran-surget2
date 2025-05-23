@@ -365,9 +365,6 @@ public class JardinCurseur
             int cy = caseY + dy;
             jardin.Terrains[terrainX, terrainY].Cases[cy, cx].Plante = plante;
         }
-
-        Console.WriteLine($"{plante.GetType().Name} plantée avec succès !");
-        Console.ReadKey();
     }
 
     public bool PeutPlanter(Plantes plante)

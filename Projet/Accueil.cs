@@ -157,115 +157,138 @@ public class Accueil
                             Console.WriteLine($"💧 Tu as arrosé la plante !");
                         }
 
-                        Console.WriteLine("\nAppuie sur une touche pour revenir au menu.");
-                        Console.ReadKey();
                         break;
 
                     case ConsoleKey.D2:
-                        Console.Clear();
-                        Console.WriteLine("🌱 Vous avez choisi de semer une graine !");
-                        Console.WriteLine("\nVoici votre inventaire de graines :\n");
-
-                        var graines = inventaire.Objets.Where(o => o.Nom.Contains("graine")).ToList();
-
-                        if (graines.Count == 0)
+                        
+                        bool choixValide = false;
+                        while (!choixValide)
                         {
-                            Console.WriteLine("Tu n'as pas de graines à semer !");
-                            Console.WriteLine("\nAppuie sur une touche pour revenir.");
-                            Console.ReadKey();
-                            break;
-                        }
+                            Console.Clear();
+                            Console.WriteLine("🌱 Vous avez choisi de semer une graine !");
+                            Console.WriteLine("\nVoici votre inventaire de graines :\n");
 
-                        for (int i = 0; i < graines.Count; i++)
-                        {
-                            Console.WriteLine($"{i + 1}. {graines[i].Nom} x{graines[i].Quantite}");
-                        }
+                            var graines = inventaire.Objets.Where(o => o.Nom.Contains("graine")).ToList();
 
-                        Console.Write("\nChoix (tapez le numéro correspondant) : ");
-
-                        if (int.TryParse(Console.ReadLine()!, out int choixGraine) && choixGraine > 0 && choixGraine <= graines.Count)
-                        {
-                            var graineChoisie = graines[choixGraine - 1];
-
-                            Plantes planteChoisie = graineChoisie.Nom switch
+                            if (graines.Count == 0)
                             {
-                                "graine de tomate" => new Tomate(),
-                                "graine de aubergine" => new Aubergine(),
-                                "graine de mangue" => new Mangue(),
-                                "graine de hibiscus" => new Hibiscus(),
-                                "graine de thé" => new The(),
-                                _ => throw new InvalidOperationException("Type de graine non reconnu.")
-                            };
-
-                            bool positionValide = false;
-
-                            while (!positionValide)
-                            {
-                                Console.WriteLine("\nChoisissez un emplacement pour semer cette graine.\n");
-                                curseur.Deplacer(instructions : true, nomPlante: planteChoisie.Nom);
-
-                                if (!curseur.PeutPlanter(planteChoisie))
-                                {
-                                    int casesNecessaires = planteChoisie.Occupation.Count;
-                                    Console.ForegroundColor = ConsoleColor.Red;
-                                    Console.WriteLine($"\n Impossible de planter ici. {planteChoisie.Nom} a besoin de {casesNecessaires} case(s) libres autour de la case centrale.");
-                                    Console.ResetColor();
-                                    Console.WriteLine("Veuillez choisir un autre emplacement.\n");
-                                    continue;
-                                }
-
-                                // Planter
-                                curseur.Planter(planteChoisie);
-
-                                if (inventaire.SemerGraine(graineChoisie.Nom))
-                                {
-                                    Console.ForegroundColor = ConsoleColor.Green;
-                                    Console.WriteLine($"\n✅ {planteChoisie.Nom} plantée avec succès !");
-                                    Console.ResetColor();
-                                }
-                                else
-                                {
-                                    Console.WriteLine(" Erreur : Impossible de retirer la graine de l'inventaire.");
-                                }
-                                Console.WriteLine("\nAppuie sur une touche pour continuer...");
+                                Console.WriteLine("Tu n'as pas de graines à semer !");
+                                Console.WriteLine("\nAppuie sur une touche pour revenir.");
                                 Console.ReadKey();
-                                positionValide = true;
+                                break;
                             }
+
+                            for (int i = 0; i < graines.Count; i++)
+                            {
+                                Console.WriteLine($"{i + 1}. {graines[i].Nom} x{graines[i].Quantite}");
+                            }
+
+                            Console.Write("\nChoix (tapez le numéro correspondant) : ");
+
+                            if (int.TryParse(Console.ReadLine()!, out int choixGraine) && choixGraine > 0 && choixGraine <= graines.Count)
+                            {
+                                choixValide = true;
+
+                                var graineChoisie = graines[choixGraine - 1];
+
+                                Plantes planteChoisie = graineChoisie.Nom switch
+                                {
+                                    "graine de tomate" => new Tomate(),
+                                    "graine de aubergine" => new Aubergine(),
+                                    "graine de mangue" => new Mangue(),
+                                    "graine de hibiscus" => new Hibiscus(),
+                                    "graine de thé" => new The(),
+                                    _ => throw new InvalidOperationException("Type de graine non reconnu.")
+                                };
+
+                                bool positionValide = false;
+
+                                while (!positionValide)
+                                {
+                                    Console.WriteLine("\nChoisissez un emplacement pour semer cette graine.\n");
+                                    curseur.Deplacer(instructions: true, nomPlante: planteChoisie.Nom);
+
+                                    if (!curseur.PeutPlanter(planteChoisie))
+                                    {
+                                        int casesNecessaires = planteChoisie.Occupation.Count;
+                                        Console.ForegroundColor = ConsoleColor.Red;
+                                        Console.WriteLine($"\n Impossible de planter ici. {planteChoisie.Nom} a besoin de {casesNecessaires} case(s) libres autour de la case centrale.");
+                                        Console.ResetColor();
+                                        Console.WriteLine("Veuillez choisir un autre emplacement.\n");
+                                        continue;
+                                    }
+
+                                    // Planter
+                                    curseur.Planter(planteChoisie);
+
+                                    if (inventaire.SemerGraine(graineChoisie.Nom))
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.Green;
+                                        Console.WriteLine($"\n✅ {planteChoisie.Nom} plantée avec succès !");
+                                        Console.ResetColor();
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine(" Erreur : Impossible de retirer la graine de l'inventaire.");
+                                    }
+                                    
+                                    positionValide = true;
+                                }
+                            }
+                            else
+                            {
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                Console.WriteLine("\n Choix invalide. Essayez à nouveau.");
+                                Console.ReadKey();
+                                Console.ResetColor();
+                            }
+                        }
+                        break;
+
+                    case ConsoleKey.D3:
+                        var recoltes = jardin.InventaireRecoltes(inventaire);
+                        if (recoltes.Count == 0)
+                        {
+                            Console.WriteLine("🌾 Aucune plante n'est prête à être récoltée.");
                         }
                         else
                         {
-                            Console.WriteLine("Choix invalide.");
+                            Console.WriteLine("🌿 Récolte effectuée !");
+                            foreach (var entry in recoltes)
+                            {
+                                string nom = entry.Key;
+                                int qte = entry.Value;
+                                string nomAffiche = qte > 1 ? nom + "s" : nom;
+                                Console.WriteLine($"- {qte} {nomAffiche} ajouté(s) à l'inventaire.");
+                            }
                         }
-
-                        Console.WriteLine("\nAppuie sur une touche pour revenir au menu.");
-                        Console.ReadKey();
                         break;
 
                     case ConsoleKey.D4:
-                        Console.WriteLine("Passage à la semaine suivante...");
-                        Thread.Sleep(1000);
-                        jardin.ToutPousser(20);
-                        // Baisser l'hydratation de toutes les plantes de 20
-                        BaisserHydratationPlantes(jardin);
+                                Console.WriteLine("Passage à la semaine suivante...");
+                                Thread.Sleep(1000);
+                                jardin.ToutPousser(20);
+                                // Baisser l'hydratation de toutes les plantes de 20
+                                BaisserHydratationPlantes(jardin);
 
-                        // URGENCE
-                        if (rnd.Next(1, 4) == 1)
-                        {
-                            Urgence.AfficherPageUrgence();
-                            Urgence.Elephant();
+                                // URGENCE
+                                if (rnd.Next(1, 4) == 1)
+                                {
+                                    Urgence.AfficherPageUrgence();
+                                    Urgence.Elephant();
+                                }
+                                finTour = true; // Permet de sortir de la boucle et avancer la semaine
+                                break;
+
+                            default:
+                                Console.WriteLine("Choix invalide.");
+                                break;
+                            }
+
+
+                            Console.WriteLine("\nAppuie sur une touche pour continuer...");
+                            Console.ReadKey();
                         }
-                        finTour = true; // Permet de sortir de la boucle et avancer la semaine
-                        break;
-
-                    default:
-                        Console.WriteLine("Choix invalide.");
-                        break;
-                }
-
-
-                Console.WriteLine("\nAppuie sur une touche pour continuer...");
-                Console.ReadKey();
-            }
         }
     }
 
