@@ -65,17 +65,16 @@ public void Grandir(Meteo meteo, string saison, TypeTerrain terrainCourant, int 
         return;
     }
 
-    // 1) Température extrême → pas de croissance
-    if (meteo.Temperature < TemperaturePreferee.min - 5 || meteo.Temperature > TemperaturePreferee.max + 5)
-    {
-        return;
-    }
-        
-    // 2) Hydratation hors-limits → pas de croissance
-    if (NiveauHydratation < EauHebdomadaire || NiveauHydratation > EauHebdomadaire * 2)
-    {
-        return;
-    }
+        // Vérif. des températures extrêmes
+        if (meteo.Temperature < TemperaturePreferee.min - 5 || meteo.Temperature > TemperaturePreferee.max + 5)
+            return;
+
+        // Hydratation hors-limites sans pluie → pas de croissance
+        if (NiveauHydratation < EauHebdomadaire
+            || NiveauHydratation > EauHebdomadaire * 2)
+        {
+            return;
+        }
 
     //  saison
         float facteurSaison = SaisonsDeSemis
@@ -109,7 +108,7 @@ public void Grandir(Meteo meteo, string saison, TypeTerrain terrainCourant, int 
         NiveauHydratation += 20;
     }
     
-        public bool Recolter()
+    public bool Recolter()
     {
         if (!Vivacite)
             return false;
@@ -124,6 +123,8 @@ public void Grandir(Meteo meteo, string saison, TypeTerrain terrainCourant, int 
     }
 
 }
+
+
 
 
 public class Tomate : Plantes
