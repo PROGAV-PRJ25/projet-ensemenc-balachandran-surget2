@@ -33,7 +33,7 @@ public class Terrain
 public class Jardin
 {
     public Terrain[,] Terrains { get; }
-    private Meteo meteo;
+    public Meteo meteo;
 
     public Jardin(Meteo meteo)
     {
@@ -203,11 +203,49 @@ public class JardinCurseur
 
                 // Indiquer si elle a besoin de plus ou moins d'eau
                 if (plante.NiveauHydratation < plante.EauHebdomadaire)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Besoin d'eau : Plus d'eau nécessaire");
+                    Console.ResetColor();
+                }
                 else if (plante.NiveauHydratation > plante.EauHebdomadaire * 2)
-                    Console.WriteLine("Besoin d'eau : Trop d'eau, réduire l'arrosage");
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Besoin d'eau : Trop d'eau, n'arrosez plus !");
+                    Console.ResetColor();
+                }
                 else
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Besoin d'eau : Hydratation correcte");
+                    Console.ResetColor();
+                }
+
+                // Températures
+                var tempMin = plante.TemperaturePreferee.min;
+                var tempMax = plante.TemperaturePreferee.max;
+                Console.WriteLine($"Température idéale : entre {tempMin}°C et {tempMax}°C");
+
+                // Comparaison avec la météo
+                int tempActuelle = jardin.meteo.Temperature;
+                if (tempActuelle < tempMin)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Il fait trop froid cette semaine pour cette plante !");
+                }
+                else if (tempActuelle > tempMax)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Il fait trop chaud cette semaine pour cette plante !");
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Température idéale pour cette plante !");
+                }
+
+                Console.ResetColor();
+
             }
 
             Console.WriteLine();
@@ -216,26 +254,28 @@ public class JardinCurseur
         ConsoleKey.Escape);
     }
 
-    public void Deplacer(bool instructions = false,  string nomPlante = "")
+    public void Deplacer(bool instructions = false,  Plantes? plante = null)
     {
         BoucleDeplacement(() =>
         {
             Console.Clear();
             Console.WriteLine("Choisissez une case avec les flèches et appuyez sur Entrée.\n");
-            if (instructions == true)
+            if (instructions && plante != null)
             {
-                var phrases = new Dictionary<string, string>
+                string message = plante.Nom switch
                 {
-                    { "Mangue", "La mangue a besoin de 9 cases autour d'elle pour grandir." },
-                    { "Aubergine", "L'aubergine occupe un carré de 2x2 cases." },
-                    { "Hibiscus", "L'hibiscus s'étale sur deux cases horizontalement." },
-                    { "Thé", "Le thé prend une rangée de 3 cases." },
-                    { "Tomate", "La tomate ne prend qu'une seule case." }
+                    "Mangue" => $"Un plant de mangue occupe 9 cases. Les mangues poussent mieux sur {plante.TerrainPrefere}.",
+                    "Aubergine" => $"Un plant d'aubergine occupe un carré de 2x2 cases. Les aubergines poussent mieux sur {plante.TerrainPrefere}",
+                    "Hibiscus" => $"L'hibiscus s'étale sur 2 cases horizontalement. L'hibiscus pousse mieux sur {plante.TerrainPrefere}",
+                    "Thé" => $"Un plant de thé prend une rangée de 3 cases. Le thé pousse mieux sur {plante.TerrainPrefere}",
+                    "Tomate" => $"La tomate ne prend qu'une seule case. La tomate pousse mieux sur {plante.TerrainPrefere}",
+                    _ => ""
                 };
-                if (phrases.ContainsKey(nomPlante))
+
+                if (!string.IsNullOrWhiteSpace(message))
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine($"ℹ️  {phrases[nomPlante]}\n");
+                    Console.WriteLine($"ℹ️  {message}\n");
                     Console.ResetColor();
                 }
             }

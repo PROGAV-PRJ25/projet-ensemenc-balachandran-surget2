@@ -57,15 +57,13 @@ public abstract class Plantes
         if (Phase == "Morte")
             return;
 
-        // 1) Température extrême → pas de croissance
-        if (meteo.Temperature < TemperaturePreferee.min - 5
-        || meteo.Temperature > TemperaturePreferee.max + 5)
-            return;
+  // 1) Vérif. température extrême
+  if (meteo.Temperature < TemperaturePreferee.min - 5 || meteo.Temperature > TemperaturePreferee.max + 5)
+    return;
 
         // 2) Hydratation hors-limits sans pluie → pas de croissance
-        if ((NiveauHydratation < EauHebdomadaire
+        if (NiveauHydratation < EauHebdomadaire
             || NiveauHydratation > EauHebdomadaire * 2)
-        && !meteo.Condition.Equals("Pluie", StringComparison.OrdinalIgnoreCase))
         {
             return;
         }

@@ -121,7 +121,7 @@ public class Accueil
 
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine($"{joueur.Argent} pièces / {objectifArgent} pièces");
+                Console.WriteLine($"    {joueur.Argent} pièces / {objectifArgent} pièces");
                 Console.ResetColor();
                 Console.WriteLine();
 
@@ -159,7 +159,6 @@ public class Accueil
 
                     case ConsoleKey.D1:
                         Console.Clear();
-                        Console.WriteLine("Tu vas arroser une plante. 🌿");
 
                         // Déplacement du curseur pour choisir l'emplacement à arroser
                         curseur.Deplacer();
@@ -174,7 +173,11 @@ public class Accueil
                         else
                         {
                             plante.Arroser(); // Appelle la méthode d'arrosage sur l'objet plante
-                            Console.WriteLine($"💧 Tu as arrosé la plante !");
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            Console.WriteLine($"\n💧 Tu as arrosé tous les plants de {plante.Nom} !");
+                            Console.WriteLine($"Cette plante occupe {plante.Occupation.Count} case(s). Toutes ses cases ont été hydratées.");
+                            Console.ResetColor();
+    
                         }
 
                         break;
@@ -226,7 +229,7 @@ public class Accueil
                                 while (!positionValide)
                                 {
                                     Console.WriteLine("\nChoisissez un emplacement pour semer cette graine.\n");
-                                    curseur.Deplacer(instructions: true, nomPlante: planteChoisie.Nom);
+                                    curseur.Deplacer(instructions: true, plante: planteChoisie);
 
                                     if (!curseur.PeutPlanter(planteChoisie))
                                     {
