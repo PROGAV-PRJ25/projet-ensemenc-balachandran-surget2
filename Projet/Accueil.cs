@@ -96,12 +96,13 @@ public class Accueil
         joueur.Inventaire.AjouterObjet("graine de hibiscus", 3);
 
         Random rnd = new Random();
-        for (int semaine = 1; semaine <= 15; semaine++)
+        int semaine = 1;
+        while (joueur.Argent < objectifArgent)
         {
 
             // Génère météo du jour
             string saison = ObtenirSaison(semaine);
-            GenererMeteo(meteo, saison, rnd); 
+            GenererMeteo(meteo, saison, rnd);
             AjoutEauPluie(jardin, meteo);
 
             bool finTour = false;
@@ -162,7 +163,7 @@ public class Accueil
 
 
                     case ConsoleKey.D1:
-                        
+
                         bool choixValide = false;
                         while (!choixValide)
                         {
@@ -233,7 +234,7 @@ public class Accueil
                                     {
                                         Console.WriteLine(" Erreur : Impossible de retirer la graine de l'inventaire.");
                                     }
-                                    
+
                                     positionValide = true;
                                 }
                             }
@@ -247,7 +248,7 @@ public class Accueil
                         }
                         break;
 
-                    
+
                     case ConsoleKey.D2:
                         Console.Clear();
 
@@ -268,7 +269,7 @@ public class Accueil
                             Console.WriteLine($"\n💧 Tu as arrosé tous les plants de {plante.Nom} !");
                             Console.WriteLine($"Cette plante occupe {plante.Occupation.Count} case(s). Toutes ses cases ont été hydratées.");
                             Console.ResetColor();
-    
+
                         }
 
                         break;
@@ -294,51 +295,52 @@ public class Accueil
                         break;
 
                     case ConsoleKey.D4:
-                                Console.WriteLine("Passage à la semaine suivante...");
-                                Thread.Sleep(1000);
-                                jardin.ToutPousser(meteo, saison, 7);
-                                // Baisser l'hydratation de toutes les plantes de 20
-                                BaisserHydratationPlantes(jardin);
+                        Console.WriteLine("Passage à la semaine suivante...");
+                        Thread.Sleep(1000);
+                        jardin.ToutPousser(meteo, saison, 7);
+                        // Baisser l'hydratation de toutes les plantes de 20
+                        BaisserHydratationPlantes(jardin);
 
-                                // URGENCE
-                                if (rnd.Next(1, 7) == 1) // 1 chance sur 7
-                                {
-                                    Urgence.AfficherPageUrgence();
-                                    Urgence.Elephant();
-                                }
-                                finTour = true; // Permet de sortir de la boucle et avancer la semaine
-                                break;
+                        // URGENCE
+                        if (rnd.Next(1, 7) == 1) // 1 chance sur 7
+                        {
+                            Urgence.AfficherPageUrgence();
+                            Urgence.Elephant();
+                        }
+                        semaine++;
+                        finTour = true; // Permet de sortir de la boucle et avancer la semaine
+                        break;
 
-                            default:
-                                Console.WriteLine("Choix invalide.");
-                                break;
+                    default:
+                        Console.WriteLine("Choix invalide.");
+                        break;
 
                     case ConsoleKey.D5:
-                            var boutique = new Boutique();
-                            boutique.Afficher(joueur);
-                            break;
-                    
-                    case ConsoleKey.D6:
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("\n⚠ Vous êtes sur le point de revenir à l'écran d'accueil.");
-                            Console.WriteLine("Toute votre progression actuelle sera PERDUE !");
-                            Console.ResetColor();
-                            Console.Write("\nÊtes-vous sûr ? (o/n) : ");
-                            var confirmation = Console.ReadKey().Key;
-                            Console.WriteLine();
+                        var boutique = new Boutique();
+                        boutique.Afficher(joueur);
+                        break;
 
-                            if (confirmation == ConsoleKey.O)
-                            {
-                                Console.WriteLine("\nRetour à l'accueil...");
-                                Thread.Sleep(1000);
-                                AfficherPageAccueil(); // Retour à l'accueil
-                            }
-                            else
-                            {
-                                Console.WriteLine("\nAction annulée. Retour au jeu.");
-                                Thread.Sleep(1000);
-                            }
-                            break;
+                    case ConsoleKey.D6:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("\n⚠ Vous êtes sur le point de revenir à l'écran d'accueil.");
+                        Console.WriteLine("Toute votre progression actuelle sera PERDUE !");
+                        Console.ResetColor();
+                        Console.Write("\nÊtes-vous sûr ? (o/n) : ");
+                        var confirmation = Console.ReadKey().Key;
+                        Console.WriteLine();
+
+                        if (confirmation == ConsoleKey.O)
+                        {
+                            Console.WriteLine("\nRetour à l'accueil...");
+                            Thread.Sleep(1000);
+                            AfficherPageAccueil(); // Retour à l'accueil
+                        }
+                        else
+                        {
+                            Console.WriteLine("\nAction annulée. Retour au jeu.");
+                            Thread.Sleep(1000);
+                        }
+                        break;
                 }
 
                 if (joueur.Argent >= objectifArgent)
@@ -357,6 +359,7 @@ public class Accueil
 
             }
         }
+        
     }
 
     public void BaisserHydratationPlantes(Jardin jardin)
