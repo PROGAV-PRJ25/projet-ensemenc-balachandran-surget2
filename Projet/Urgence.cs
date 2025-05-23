@@ -81,29 +81,39 @@ public class Urgence
         {
             Console.Clear();
             // Supprimer aléatoirement quelques plantes (par ex. 25 à 50 % des plantes existantes)
-            List<(int tx, int ty, int i, int j)> plantesExistantes = new();
-
+            var plantesMap = new Dictionary<Plantes, List<(int tx, int ty, int i, int j)>>();
             for (int tx = 0; tx < 2; tx++)
+            for (int ty = 0; ty < 3; ty++)
+            for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
             {
-                for (int ty = 0; ty < 3; ty++)
+                var plante = _jardin.Terrains[tx, ty].Cases[i, j].Plante;
+                if (plante != null)
                 {
-                    for (int i = 0; i < 3; i++)
+                    if (!plantesMap.TryGetValue(plante, out var list))
                     {
-                        for (int j = 0; j < 3; j++)
-                        {
-                            if (_jardin.Terrains[tx, ty].Cases[i, j].Plante != null)
-                            {
-                                plantesExistantes.Add((tx, ty, i, j));
-                            }
-                        }
+                        list = new List<(int, int, int, int)>();
+                        plantesMap[plante] = list;
                     }
+                    list.Add((tx, ty, i, j));
                 }
             }
-            int plantesASupprimer = rnd.Next(plantesExistantes.Count / 4, plantesExistantes.Count / 2 + 1);
-            for (int k = 0; k < plantesASupprimer; k++)
+
+            var toutesPlantes = plantesMap.Keys.ToList();
+            int totalInstances = toutesPlantes.Count;
+            int aSupprimer = rnd.Next(totalInstances/4, totalInstances/2 + 1);
+
+            var plantesPiétinées = toutesPlantes
+                .OrderBy(_ => rnd.Next())
+                .Take(aSupprimer)
+                .ToList();
+
+            foreach (var plante in plantesPiétinées)
             {
-                var (tx, ty, i, j) = plantesExistantes[k];
-                _jardin.Terrains[tx, ty].Cases[i, j].Plante = null;
+                foreach (var (tx, ty, i, j) in plantesMap[plante])
+                {
+                    _jardin.Terrains[tx, ty].Cases[i, j].Plante = null;
+                }
             }
 
             _curseur.Afficher();
