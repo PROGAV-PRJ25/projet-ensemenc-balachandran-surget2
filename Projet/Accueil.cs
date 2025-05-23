@@ -27,7 +27,7 @@ public class Accueil
         Console.WriteLine(TextHelper.CenterText(@"|_____|_| \_|____/|_____|_|  |_|_____|_| \_|\____|"));
 
         Console.WriteLine();
-        Console.WriteLine(TextHelper.CenterText("Bienvenue dans le simulateur de jardinage !"));
+        Console.WriteLine(TextHelper.CenterText("Bienvenue au 🏝️ SRI LANKA 🏝️!"));
         Console.ResetColor();
         Console.WriteLine();
 
@@ -442,24 +442,73 @@ public class Accueil
 }
 
 
-
-    
-    
     // Fonction pour lire les règles du jeu
     public void LireRegles()
     {
         Console.Clear();
-        Console.WriteLine("Voici les règles du jeu :\n");
-        Console.WriteLine("1. Vous êtes un jardinier et vous devez cultiver des plantes.");
-        Console.WriteLine("2. Vous avez un inventaire avec différents outils et graines.");
-        Console.WriteLine("3. Chaque jour, vous devez arroser vos plantes et semer des graines.");
-        Console.WriteLine("4. Vous pouvez récolter les plantes une fois qu'elles sont matures.");
-        Console.WriteLine("5. Faites attention à la météo ! Elle peut affecter la croissance de vos plantes.");
-        Console.WriteLine("6. L'objectif est de faire pousser vos plantes et récolter le plus de ressources possible.\n");
-        Console.WriteLine("Appuyez sur une touche pour revenir à l'écran d'accueil.");
+
+        Console.WriteLine("=== Règles du simulateur de jardinage ===");
+        Console.WriteLine();
+
+        Console.WriteLine("1. Choix de la saison de départ");
+        Console.WriteLine("   • Printemps, Été, Automne, Hiver");
+        Console.WriteLine("   • La saison change automatiquement tous les 4 semaines et définit la météo");
+        Console.WriteLine();
+
+        Console.WriteLine("2. Potager et terrains");
+        Console.WriteLine("   • Grille de 2×3 terrains, chacun de 3×3 cases.");
+        Console.WriteLine("   • 2 terrains de chaque type : Sable, Terre, Argile.");
+        Console.WriteLine();
+
+        Console.WriteLine("3. Plantes et semis");
+        Console.WriteLine("   • Types : Tomate 🍅, Aubergine 🍆, Mangue 🥭, Hibiscus 🌺, Thé 🍃");
+        Console.WriteLine("   • Nature : Annuelle (meurt après 1 récolte)");
+        Console.WriteLine("              ou Vivace (plusieurs cycles).");
+        Console.WriteLine("   • Occupation : nombre de cases occupé par la plante (indiqué lorsque vous choisissez de semer)");
+        Console.WriteLine("   • Phases : Graine → Jeune pousse → En croissance → Mature → Morte");
+        Console.WriteLine("   • Bonus de croissance : +20 % si on est dans la saison de semis de la plante, –20 % sinon;");
+        Console.WriteLine("     +20 % si plantée sur le sol préféré de la plante, –10 % sinon.");
+        Console.WriteLine();
+
+        Console.WriteLine("4. Météo et hydratation");
+        Console.WriteLine("   • Chaque semaine : Température, Humidité, Vent, Condition (Ensoleillé, Nuageux, Pluie).");
+        Console.WriteLine("   • Pluie apporte automatiquement +10 d'eau ; hors pluie, l'eau s'évapore chaque semaine (-20).");
+        Console.WriteLine("   • Si eau < besoin hebdo ou > 2× besoin hebdo → pas de croissance.");
+        Console.WriteLine();
+
+        Console.WriteLine("5. Croissance");
+        Console.WriteLine("   • Les plantes poussent chaque semaine en fonction des paramètres précisé au dessus.");
+        Console.WriteLine();
+
+        Console.WriteLine("6. Actions disponibles");
+        Console.WriteLine("   • Flèches : déplacer le curseur et voir les infos de la plante sur la case active");
+        Console.WriteLine("   • 1 Arroser   : +20 d'eau à la plante sous le curseur. ATTENTION les plantes ne poussent pas sans être arrosées");
+        Console.WriteLine("   • 2 Semer     : choisir une graine puis une case valide.");
+        Console.WriteLine("   • 3 Récolter  : collecte les plantes matures ; ");
+        Console.WriteLine("                   les plantes annuelles disparaissent, et le vivaces repassent en phase En croissance.");
+        Console.WriteLine("                   Récolter permet aussi de nettoyer le terrain si des plantes sont mortes.");
+        Console.WriteLine("   • 4 Semaine suivante : passer au tour suivant");
+        Console.WriteLine("   • 5 Boutique  : acheter des graines ou vendre vos récoltes et outils. L'objectif est d'accumuler des pièces");
+        Console.WriteLine("   • 6 Quitter   : abandonne la partie en cours.");
+        Console.WriteLine();
+
+        Console.WriteLine("7. Urgences");
+        Console.WriteLine("   • Éléphants : 1 fois sur 6, des éléphants peuvent envahir votre jardin. Si fuient → rien ne change,");
+        Console.WriteLine("                 sinon tout le potager est piétiné.");
+        Console.WriteLine();
+
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("8. Objectif et fin de partie");
+        Console.WriteLine($"   • Atteindre {objectifArgent} pièces pour gagner.");
+        Console.WriteLine("   • Le jeu s'arrête dès que vous avez atteint cet objectif.");
+        Console.WriteLine();
+        Console.ResetColor();
+
+        Console.WriteLine("Appuyez sur une touche pour revenir à l'accueil...");
         Console.ReadKey();
-        AfficherPageAccueil(); // Retour à l'accueil
+        AfficherPageAccueil();
     }
+
 
     // Fonction pour quitter le jeu
     public void Quitter()
