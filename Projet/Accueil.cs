@@ -126,6 +126,7 @@ public class Accueil
                 Console.WriteLine();
 
                 curseur.Afficher();
+                curseur.AfficherInfosSousCurseur();
 
                 Console.WriteLine();
 
@@ -136,9 +137,8 @@ public class Accueil
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("\nQue voulez-vous faire ?");
-                Console.WriteLine("0. Voir caractéristiques des plantes");
-                Console.WriteLine("1. Arroser les plantes");
-                Console.WriteLine("2. Semer une graine");
+                Console.WriteLine("1. Semer une graine");
+                Console.WriteLine("2. Arroser les plantes");
                 Console.WriteLine("3. Récolter des plantes");
                 Console.WriteLine("4. Passer à la semaine suivante");
                 Console.WriteLine("5. Accéder à la boutique 🛒");
@@ -153,36 +153,15 @@ public class Accueil
 
                 switch (choix)
                 {
-                    case ConsoleKey.D0:
-                        curseur.VoirCaracteristiquesEnDeplacement();
+                    case ConsoleKey.UpArrow:
+                    case ConsoleKey.DownArrow:
+                    case ConsoleKey.LeftArrow:
+                    case ConsoleKey.RightArrow:
+                        curseur.DeplacerUneFois(choix);
                         break;
+
 
                     case ConsoleKey.D1:
-                        Console.Clear();
-
-                        // Déplacement du curseur pour choisir l'emplacement à arroser
-                        curseur.Deplacer();
-
-                        // Récupérer la plante à l'endroit du curseur
-                        Plantes? plante = curseur.ObtenirPlante();
-
-                        if (plante == null)
-                        {
-                            Console.WriteLine("Il n'y a pas de plante ici à arroser.");
-                        }
-                        else
-                        {
-                            plante.Arroser(); // Appelle la méthode d'arrosage sur l'objet plante
-                            Console.ForegroundColor = ConsoleColor.Cyan;
-                            Console.WriteLine($"\n💧 Tu as arrosé tous les plants de {plante.Nom} !");
-                            Console.WriteLine($"Cette plante occupe {plante.Occupation.Count} case(s). Toutes ses cases ont été hydratées.");
-                            Console.ResetColor();
-    
-                        }
-
-                        break;
-
-                    case ConsoleKey.D2:
                         
                         bool choixValide = false;
                         while (!choixValide)
@@ -268,6 +247,32 @@ public class Accueil
                         }
                         break;
 
+                    
+                    case ConsoleKey.D2:
+                        Console.Clear();
+
+                        // Déplacement du curseur pour choisir l'emplacement à arroser
+                        curseur.Deplacer();
+
+                        // Récupérer la plante à l'endroit du curseur
+                        Plantes? plante = curseur.ObtenirPlante();
+
+                        if (plante == null)
+                        {
+                            Console.WriteLine("Il n'y a pas de plante ici à arroser.");
+                        }
+                        else
+                        {
+                            plante.Arroser(); // Appelle la méthode d'arrosage sur l'objet plante
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            Console.WriteLine($"\n💧 Tu as arrosé tous les plants de {plante.Nom} !");
+                            Console.WriteLine($"Cette plante occupe {plante.Occupation.Count} case(s). Toutes ses cases ont été hydratées.");
+                            Console.ResetColor();
+    
+                        }
+
+                        break;
+
                     case ConsoleKey.D3:
                         var recoltes = jardin.InventaireRecoltes(joueur.Inventaire);
                         if (recoltes.Count == 0)
@@ -349,8 +354,6 @@ public class Accueil
                     return; // sort de Jouer()
                 }
 
-                Console.WriteLine("\nAppuie sur une touche pour continuer...");
-                Console.ReadKey();
             }
         }
     }
