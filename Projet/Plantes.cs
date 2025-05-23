@@ -17,14 +17,13 @@ public abstract class Plantes
 
     // Attributs de croissance
     public string Phase { get; set; } = "Graine";
-    public int NombrePhases { get; set; } // nombre total de phases
-    public int JoursDepuisSemis { get; set; } = 0;
+    public int JoursDepuisSemis { get; set; } = 0; // 
+
 
     // Pour savoir si la plante est considérée comme arrosée cette période (par exemple si hydratation >= 50)
     public bool EstArrosee => NiveauHydratation >= EauHebdomadaire;
 
-    // Pour savoir si la plante est mature
-    public bool EstMature => Phase == "Mature";
+    public bool EstMature => Phase == "Mature";    // Pour savoir si la plante est mature
 
     protected void InitCycles()
     {
@@ -58,56 +57,52 @@ public abstract class Plantes
     }
 
     // Croissance gérée ici pour toutes les plantes
-public void Grandir(Meteo meteo, string saison, TypeTerrain terrainCourant, int jours)
-{
-    if (Phase == "Morte") 
+    public void Grandir(Meteo meteo, string saison, TypeTerrain terrainCourant, int jours)
     {
-        return;
-    }
-
-        // Vérif. des températures extrêmes
-        if (meteo.Temperature < TemperaturePreferee.min - 5 || meteo.Temperature > TemperaturePreferee.max + 5)
-            return;
-
-        // Hydratation hors-limites sans pluie → pas de croissance
-        if (NiveauHydratation < EauHebdomadaire
-            || NiveauHydratation > EauHebdomadaire * 2)
+        if (Phase == "Morte") 
         {
             return;
         }
 
-    //  saison
-        float facteurSaison = SaisonsDeSemis
-        .Contains(saison, StringComparer.OrdinalIgnoreCase)
-        ? 1.2f    // +20 % si bon moment de semis
-        : 0.8f;   // –20 % sinon
+        // Températures extrêmes → pas de croissance
+        if (meteo.Temperature < TemperaturePreferee.min - 5 || meteo.Temperature > TemperaturePreferee.max + 5)
+            return;
 
-    // terrain
-    float facteurTerrain = string.Equals(
-            TerrainPrefere, 
-            terrainCourant.ToString(), 
-            StringComparison.OrdinalIgnoreCase)
-        ? 1.2f    // +20 % sur sol préféré
-        : 0.9f;   // –10 % sinon
+        // Hydratation hors-limites sans pluie → pas de croissance
+        if (NiveauHydratation < EauHebdomadaire || NiveauHydratation > EauHebdomadaire * 2)
+            return;
 
-    // croissance
-    float croissanceBrute = jours * facteurSaison * facteurTerrain;
-    int croissanceTotale = Math.Max(0, (int)Math.Round(croissanceBrute));
-    JoursDepuisSemis += croissanceTotale;
 
-    // Phases
-    if      (JoursDepuisSemis >= EsperanceDeVie)                 Phase = "Morte";
-    else if (JoursDepuisSemis >= JoursPourMaturité)               Phase = "Mature";
-    else if (JoursDepuisSemis >= JoursPourMaturité * 2 / 3)     Phase = "En croissance";
-    else if (JoursDepuisSemis >= JoursPourMaturité / 3)           Phase = "Jeune pousse";
-    else                                                          Phase = "Graine";
-}
+        //  Saison
+        float facteurSaison = SaisonsDeSemis.Contains(saison, StringComparer.OrdinalIgnoreCase)
+            ? 1.2f    // +20 % si bon moment de semis
+            : 0.8f;   // –20 % sinon
 
+        // Terrain
+        float facteurTerrain = string.Equals(TerrainPrefere, terrainCourant.ToString(), StringComparison.OrdinalIgnoreCase)
+            ? 1.2f    // +20 % sur sol préféré
+            : 0.9f;   // –10 % sinon
+
+        // Croissance
+        float croissanceBrute = jours * facteurSaison * facteurTerrain;
+        int croissanceTotale = Math.Max(0, (int)Math.Round(croissanceBrute));
+        JoursDepuisSemis += croissanceTotale;
+
+        // Phases
+        if      (JoursDepuisSemis >= EsperanceDeVie)                 Phase = "Morte";
+        else if (JoursDepuisSemis >= JoursPourMaturité)               Phase = "Mature";
+        else if (JoursDepuisSemis >= JoursPourMaturité * 2 / 3)     Phase = "En croissance";
+        else if (JoursDepuisSemis >= JoursPourMaturité / 3)           Phase = "Jeune pousse";
+        else                                                          Phase = "Graine";
+    }
+
+    // Ajoute de l'eau à la plante lorsqu'elle est arrosée
     public void Arroser()
     {
         NiveauHydratation += 20;
     }
     
+    //Les plantes vivaces continuent de pousser même après les avoir récoltées
     public bool Recolter()
     {
         if (!Vivacite)
@@ -116,7 +111,7 @@ public void Grandir(Meteo meteo, string saison, TypeTerrain terrainCourant, int 
         // vivace :
         CyclesRestants--;
         if (CyclesRestants <= 0)
-            return false; 
+            return false;
         Phase = "En croissance";
         JoursDepuisSemis = JoursPourMaturité * 2 / 3;
         return true;
@@ -126,7 +121,7 @@ public void Grandir(Meteo meteo, string saison, TypeTerrain terrainCourant, int 
 
 
 
-
+// Classes dérivées : Tomate, Mangue, Aubergine, Thé, Hibiscus
 public class Tomate : Plantes
 {
     public Tomate()
@@ -141,12 +136,11 @@ public class Tomate : Plantes
         EauHebdomadaire = 25;
         TemperaturePreferee = (20, 30);
         EsperanceDeVie = 120;
-        NombrePhases = 4; // Graine, Jeune pousse, En croissance, Mature
         NiveauHydratation = 0;
         InitCycles();
     }
 
-
+    // Nombre de cases que la plante occupe
     public override List<(int dx, int dy)> Occupation => new List<(int, int)>
     {
         (0, 0)
@@ -183,7 +177,6 @@ public class Mangue : Plantes
         TemperaturePreferee = (25, 35);
         EsperanceDeVie = 3650;
         Couleur = ConsoleColor.Yellow;
-        NombrePhases = 4; // Graine, Jeune pousse, En croissance, Mature
         NiveauHydratation = 0;
         InitCycles();
     }
@@ -222,7 +215,6 @@ public class Aubergine : Plantes
         TemperaturePreferee = (22, 30);
         EsperanceDeVie = 120;
         Couleur = ConsoleColor.DarkMagenta;
-        NombrePhases = 4; // Graine, Jeune pousse, En croissance, Mature
         NiveauHydratation = 0;
         InitCycles();
     }
@@ -259,7 +251,6 @@ public class The : Plantes
         TemperaturePreferee = (22, 28);
         EsperanceDeVie = 1825;
         Couleur = ConsoleColor.Green;
-        NombrePhases = 4; // Graine, Jeune pousse, En croissance, Mature
         NiveauHydratation = 0;
         InitCycles();
     }
@@ -295,7 +286,6 @@ public class Hibiscus : Plantes
         TemperaturePreferee = (23, 35);
         EsperanceDeVie = 1000;
         Couleur = ConsoleColor.DarkRed;
-        NombrePhases = 4; // Graine, Jeune pousse, En croissance, Mature
         NiveauHydratation = 0;
         InitCycles();
     }

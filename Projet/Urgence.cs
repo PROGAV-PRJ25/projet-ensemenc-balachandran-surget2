@@ -4,20 +4,18 @@ public class Urgence
 {
     private Jardin _jardin;
     private JardinCurseur _curseur;
-
     public Urgence(Jardin jardin, JardinCurseur curseur)
     {
         _jardin = jardin;
         _curseur = curseur;
     }
 
-
+    // Affichage du texte en clignotant
     public void AfficherPageUrgence()
     {
-        // Mode URGENCE qui clignote
         Console.Clear();
         Console.ForegroundColor = ConsoleColor.Red;
-        for (int i = 1; i < 6; i++)
+        for (int i = 1; i < 6; i++) // Afficher 5 fois
         {
             Console.WriteLine(TextHelper.CenterText(@",__  __  ___  ____  _____   _   _ ____   ____ _____ _   _  ____ _____   _ "));
             Console.WriteLine(TextHelper.CenterText(@"|  \/  |/ _ \|  _ \| ____| | | | |  _ \ / ___| ____| \ | |/ ___| ____| | |"));
@@ -25,19 +23,19 @@ public class Urgence
             Console.WriteLine(TextHelper.CenterText(@"| |  | | |_| | |_| | |___  | |_| |  _ <| |_| | |___| |\  | |___| |___  |_|"));
             Console.WriteLine(TextHelper.CenterText(@"|_|  |_|\___/|____/|_____|  \___/|_| \_\\____|_____|_| \_|\____|_____| (_)"));
 
-            // Attendre 5 secondes avant de nettoyer l'écran
             Thread.Sleep(300); // Pause de 300ms pour voir le texte
             Console.Clear(); // Efface le texte
             Thread.Sleep(300); // Pause de 300ms avant de le réafficher
 
         }
-        Console.Clear(); // Efface le texte
+        Console.Clear();
         Console.ResetColor();
 
         Console.WriteLine("Appuyez sur une touche pour gérer la situation !");
         Console.ReadKey();
     }
 
+    // URGENCE : Invasion d'éléphants
     public void Elephant()
     {
         Console.Clear();
@@ -57,7 +55,7 @@ public class Urgence
 
         if (reponse == "oui")
         {
-            if (nombreAleatoire == 1)
+            if (nombreAleatoire == 1) // 1 chance sur 3 que les éléphants prennent peur et ne fassent pas de dégâts
             {
                 Console.Clear();
                 _curseur.Afficher();
@@ -66,7 +64,7 @@ public class Urgence
                 Console.ResetColor();
 
             }
-            else
+            else // ils écrasent tout sur leur passage
             {
                 Console.Clear();
                 AnimationElephant(_jardin);
@@ -105,10 +103,7 @@ public class Urgence
             int totalInstances = toutesPlantes.Count;
             int aSupprimer = rnd.Next(totalInstances / 4, totalInstances / 2 + 1);
 
-            var plantesPiétinées = toutesPlantes
-                .OrderBy(_ => rnd.Next())
-                .Take(aSupprimer)
-                .ToList();
+            var plantesPiétinées = toutesPlantes.OrderBy(_ => rnd.Next()).Take(aSupprimer).ToList();
 
             foreach (var plante in plantesPiétinées)
             {
@@ -133,7 +128,7 @@ public class Urgence
     }
 
 
-
+    // Méthode qui gère l'animation des éléphants sur la console
     public void AnimationElephant(Jardin jardin)
     {
         int largeur = 3; // Colonnes
@@ -205,23 +200,24 @@ public class Urgence
         Console.ForegroundColor = ConsoleColor.DarkGray;
     }
     
+    // Méthode qui supprime toutes les plantes
     private void ClearAllPlants()
-{
-    for (int tx = 0; tx < _jardin.Terrains.GetLength(0); tx++)
     {
-        for (int ty = 0; ty < _jardin.Terrains.GetLength(1); ty++)
+        for (int tx = 0; tx < _jardin.Terrains.GetLength(0); tx++)
         {
-            var terrain = _jardin.Terrains[tx, ty];
-            for (int i = 0; i < terrain.Cases.GetLength(0); i++)
+            for (int ty = 0; ty < _jardin.Terrains.GetLength(1); ty++)
             {
-                for (int j = 0; j < terrain.Cases.GetLength(1); j++)
+                var terrain = _jardin.Terrains[tx, ty];
+                for (int i = 0; i < terrain.Cases.GetLength(0); i++)
                 {
-                    terrain.Cases[i, j].Plante = null!;
+                    for (int j = 0; j < terrain.Cases.GetLength(1); j++)
+                    {
+                        terrain.Cases[i, j].Plante = null!;
+                    }
                 }
             }
         }
     }
-}
 
 
 }

@@ -1,23 +1,11 @@
 
-public class TextHelper
-{
-    public static string CenterText(string text)
-    {
-        int largeurConsole = Console.WindowWidth;
-        int positionX = (largeurConsole - text.Length) / 2;
-        return new string(' ', Math.Max(positionX, 0))+ text.Trim();
-    }
-}
-
-
-
+// ACCUEIL DU JEU 
 public class Accueil
 {
-    const int objectifArgent = 100;
+    const int objectifArgent = 100; // On définit l'objectif ici
     public void AfficherPageAccueil()
     {
         // Affichage du dessin ASCII pour la page d'accueil
-
         Console.Clear();
         Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine(TextHelper.CenterText(@",_____ _   _ ____  _____ __  __ _____ _   _  ____ "));
@@ -69,6 +57,7 @@ public class Accueil
     {
         Console.Clear();
         Console.WriteLine("Vous avez choisi de jouer !");
+        // Choix de la saison
         Console.WriteLine("Choisissez votre saison de départ :");
         Console.WriteLine("1. Printemps 🌸  2. Été 🌞  3. Automne 🍂   4. Hiver ⛄");
         string choixSaison = Console.ReadKey(true).Key switch
@@ -77,9 +66,11 @@ public class Accueil
             ConsoleKey.D2 => "Été",
             ConsoleKey.D3 => "Automne",
             ConsoleKey.D4 => "Hiver",
-            _             => "Printemps"
+            _ => "Printemps" // Par défaut
         };
         Console.WriteLine($"Saison sélectionnée : {choixSaison}\n");
+
+        // Instantiation 
         Meteo meteo = new Meteo();
         Jardin jardin = new Jardin(meteo);
         JardinCurseur curseur = new JardinCurseur(jardin);
@@ -88,26 +79,30 @@ public class Accueil
 
 
         // Ajouter des objets à l'inventaire
-        joueur.Inventaire.AjouterObjet("Arrosoir", 1);
+        joueur.Inventaire.AjouterObjet("Arrosoir", 1); // n'est la que pour l'ésthétique 
         joueur.Inventaire.AjouterObjet("graine de tomate", 5);
-        joueur.Inventaire.AjouterObjet("graine de aubergine", 3);
-        joueur.Inventaire.AjouterObjet("graine de mangue", 3);
+        joueur.Inventaire.AjouterObjet("graine de aubergine", 2);
+        joueur.Inventaire.AjouterObjet("graine de mangue", 2);
         joueur.Inventaire.AjouterObjet("graine de thé", 3);
         joueur.Inventaire.AjouterObjet("graine de hibiscus", 3);
 
         Random rnd = new Random();
         int semaine = 1;
+
+        // Boucle du jeu (le jeu s'arrête quand l'objectif est atteint)
         while (joueur.Argent < objectifArgent)
         {
 
-            // Génère météo du jour
+            // Génère météo du jour en fonction de la saison
             string saison = ObtenirSaison(semaine);
             GenererMeteo(meteo, saison, rnd);
             AjoutEauPluie(jardin, meteo);
 
             bool finTour = false;
+            // Le nombre d'actions n'est pas limité, le joueur décide de la fin de son tour
             while (!finTour)
             {
+                // Affichage
                 Console.Clear();
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.Magenta;
@@ -130,12 +125,11 @@ public class Accueil
                 curseur.AfficherInfosSousCurseur();
 
                 Console.WriteLine();
-
                 joueur.Inventaire.Afficher();
-
-
-
                 Console.WriteLine();
+                
+                // Affichage du menu d'actions
+
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("\nQue voulez-vous faire ?");
                 Console.WriteLine("1. Semer une graine");
@@ -152,6 +146,7 @@ public class Accueil
                 ConsoleKey choix = Console.ReadKey().Key;
                 Console.WriteLine();
 
+                // Permet de déplacer le curseur sur le potager et de voir les caractéristiques des plantes 
                 switch (choix)
                 {
                     case ConsoleKey.UpArrow:
@@ -161,7 +156,7 @@ public class Accueil
                         curseur.DeplacerUneFois(choix);
                         break;
 
-
+                    // Semer une garine
                     case ConsoleKey.D1:
 
                         bool choixValide = false;
@@ -171,6 +166,7 @@ public class Accueil
                             Console.WriteLine("🌱 Vous avez choisi de semer une graine !");
                             Console.WriteLine("\nVoici votre inventaire de graines :\n");
 
+                            // On affiche toutes les graines qui sont dans l'inventaire
                             var graines = joueur.Inventaire.Objets.Where(o => o.Nom.Contains("graine")).ToList();
 
                             if (graines.Count == 0)
@@ -186,12 +182,12 @@ public class Accueil
                                 Console.WriteLine($"{i + 1}. {graines[i].Nom} x{graines[i].Quantite}");
                             }
 
+                            // Le joueur choisit la graine qu'il souhaite semer
                             Console.Write("\nChoix (tapez le numéro correspondant) : ");
 
                             if (int.TryParse(Console.ReadLine()!, out int choixGraine) && choixGraine > 0 && choixGraine <= graines.Count)
                             {
                                 choixValide = true;
-
                                 var graineChoisie = graines[choixGraine - 1];
 
                                 Plantes planteChoisie = graineChoisie.Nom switch
@@ -204,8 +200,8 @@ public class Accueil
                                     _ => throw new InvalidOperationException("Type de graine non reconnu.")
                                 };
 
+                                // On vérifie que l'emplacement choisi est possible
                                 bool positionValide = false;
-
                                 while (!positionValide)
                                 {
                                     Console.WriteLine("\nChoisissez un emplacement pour semer cette graine.\n");
@@ -248,11 +244,11 @@ public class Accueil
                         }
                         break;
 
-
+                    // Arroser
                     case ConsoleKey.D2:
                         Console.Clear();
 
-                        // Déplacement du curseur pour choisir l'emplacement à arroser
+                        // Déplacement du curseur pour choisir l'emplacement
                         curseur.Deplacer();
 
                         // Récupérer la plante à l'endroit du curseur
@@ -271,11 +267,13 @@ public class Accueil
                             Console.ResetColor();
 
                         }
-
                         break;
 
+                    // Récolter
                     case ConsoleKey.D3:
                         var recoltes = jardin.InventaireRecoltes(joueur.Inventaire);
+
+                        // Permet de nettoyer les plantes mortes
                         jardin.NettoyerPlantesMortes();
                         if (recoltes.Count == 0)
                         {
@@ -294,14 +292,15 @@ public class Accueil
                         }
                         break;
 
+                    // Passer à la semaine suivante
                     case ConsoleKey.D4:
                         Console.WriteLine("Passage à la semaine suivante...");
                         Thread.Sleep(1000);
-                        jardin.ToutPousser(meteo, saison, 7);
-                        // Baisser l'hydratation de toutes les plantes de 20
-                        BaisserHydratationPlantes(jardin);
 
-                        // URGENCE
+                        jardin.ToutPousser(meteo, saison, 7); // Le jardin avance de 7 jours
+                        BaisserHydratationPlantes(jardin); // Baisser l'hydratation de toutes les plantes de 20
+
+                        // MODE URGENCE
                         if (rnd.Next(1, 7) == 1) // 1 chance sur 7
                         {
                             Urgence.AfficherPageUrgence();
@@ -315,16 +314,20 @@ public class Accueil
                         Console.WriteLine("Choix invalide.");
                         break;
 
+                    // Accéder à la boutique
                     case ConsoleKey.D5:
                         var boutique = new Boutique();
                         boutique.Afficher(joueur);
                         break;
 
+                    // Sortir du jeu (Retour à l'accueil)
                     case ConsoleKey.D6:
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("\n⚠ Vous êtes sur le point de revenir à l'écran d'accueil.");
                         Console.WriteLine("Toute votre progression actuelle sera PERDUE !");
                         Console.ResetColor();
+
+                        // Double confirmation
                         Console.Write("\nÊtes-vous sûr ? (o/n) : ");
                         var confirmation = Console.ReadKey().Key;
                         Console.WriteLine();
@@ -343,12 +346,13 @@ public class Accueil
                         break;
                 }
 
+                // Le joueur a atteint l'objectif
                 if (joueur.Argent >= objectifArgent)
                 {
                     Console.Clear();
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("\n🎉 Félicitations !");
-                    Console.WriteLine("💰 Vous avez atteint 100 pièces !");
+                    Console.WriteLine($"💰 Vous avez atteint {objectifArgent} pièces !");
                     Console.WriteLine("🏆 Vous avez gagné !");
                     Console.ResetColor();
                     Console.WriteLine("\nAppuyez sur une touche pour revenir à l'accueil...");
@@ -359,9 +363,10 @@ public class Accueil
 
             }
         }
-        
+
     }
 
+    // Méthode pour baisser le niveau d'hydratation des plantes à la fin de chaque tour
     public void BaisserHydratationPlantes(Jardin jardin)
     {
         foreach (var plante in jardin.ObtenirToutesLesPlantes())
@@ -372,10 +377,10 @@ public class Accueil
         }
     }
 
+    // Méthode pour ajouter de l'eau aux plantes lorsqu'il pleut
     public void AjoutEauPluie(Jardin jardin, Meteo meteo)
     {
         bool pluie = meteo.Condition.ToLower().Contains("pluie");
-
         foreach (var plante in jardin.ObtenirToutesLesPlantes())
         {
             if (pluie)
@@ -383,12 +388,11 @@ public class Accueil
         }
     }
 
-
+    // Méthode pour générer la météo selon la saison
     public void GenererMeteo(Meteo meteo, string saison, Random rnd)
     {
         int tMin, tMax, hMin, hMax, vMin, vMax; //température min max, humidité min max, vent min max
         Dictionary<string, int> proba;
-
         switch (saison)
         {
             case "Printemps":
@@ -435,11 +439,11 @@ public class Accueil
     private const int SemainesParSaison = 4;
 
     public string ObtenirSaison(int semaine)
-{
-    // (semaine-1) pour que la semaine 1 soit dans le 1er index
-    int index = (semaine - 1) / SemainesParSaison % Saisons.Length;
-    return Saisons[index];
-}
+    {
+        // (semaine-1) pour que la semaine 1 soit dans le 1er index
+        int index = (semaine - 1) / SemainesParSaison % Saisons.Length;
+        return Saisons[index];
+    }
 
 
     // Fonction pour lire les règles du jeu

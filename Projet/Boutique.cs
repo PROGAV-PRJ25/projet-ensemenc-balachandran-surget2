@@ -1,9 +1,9 @@
 public class Boutique
 {
+    // Méthode pour afficher la boutique
     public void Afficher(Joueur joueur)
     {
         bool quitter = false;
-
         while (!quitter)
         {
             Console.Clear();
@@ -14,8 +14,10 @@ public class Boutique
             Console.WriteLine("╚════════════════════════════════════╝");
             Console.ResetColor();
 
+            // Afficher l'argent du joueur
             Console.WriteLine($"💰 Votre argent : {joueur.Argent} pièces\n");
 
+            // Menu d'actions
             Console.WriteLine("Que souhaitez-vous faire ?");
             Console.WriteLine("1️⃣ Acheter");
             Console.WriteLine("2️⃣ Vendre");
@@ -46,8 +48,10 @@ public class Boutique
         }
     }
 
+    // Méthode pour acheter dans la boutique
     public void Acheter(Joueur joueur)
     {
+        // Ajout des différents éléments dans le catalogue
         var catalogue = new Dictionary<string, int>
         {
             { "graine de tomate", 5 },
@@ -63,15 +67,17 @@ public class Boutique
         Console.WriteLine("║        🛍️  ACHAT DE GRAINES    ║");
         Console.WriteLine("╚════════════════════════════════╝");
         Console.ResetColor();
-        
+
         Console.WriteLine($"💰 Votre argent : {joueur.Argent} pièces\n");
 
         int i = 1;
+        // Affichage des éléments du catalogue
         foreach (var item in catalogue)
         {
             Console.WriteLine($"{i++}. {item.Key} - {item.Value} pièces");
         }
         Console.WriteLine($"{i}. Retour");
+
 
         Console.Write("\nChoisissez un article (numéro) : ");
         if (int.TryParse(Console.ReadLine(), out int choix) && choix > 0 && choix < i)
@@ -99,6 +105,7 @@ public class Boutique
         Console.ReadKey();
     }
 
+    // Méthode pour que le joueur puisse vendre ses récoltes
     public void Vendre(Joueur joueur)
     {
         Console.Clear();
@@ -121,16 +128,19 @@ public class Boutique
             return;
         }
 
+        // Affiche les éléments que le joueur peut vendre
         for (int i = 0; i < vendables.Count; i++)
         {
             Console.WriteLine($"{i + 1}. {vendables[i].Nom} x{vendables[i].Quantite}");
         }
         Console.WriteLine($"{vendables.Count + 1}. Retour");
 
+
         Console.Write("\nChoisissez un article à vendre (numéro) : ");
         if (int.TryParse(Console.ReadLine(), out int choix) && choix > 0 && choix <= vendables.Count)
         {
             var item = vendables[choix - 1];
+            // Définition des prix des différentes plantes 
             int prix = item.Nom switch
             {
                 "tomate" => 4,
@@ -140,7 +150,8 @@ public class Boutique
                 "thé" => 7,
                 _ => 2 // par défaut
             };
-            
+
+            // Choix de la quantité
             Console.Write($"📦 Combien de {item.Nom} souhaitez-vous vendre ? (Max {item.Quantite}) : ");
 
             if (int.TryParse(Console.ReadLine(), out int quantiteAVendre) &&
@@ -154,7 +165,6 @@ public class Boutique
 
                 int total = prix * quantiteAVendre;
                 joueur.AjouterArgent(total);
-
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine($"\nVous avez vendu {quantiteAVendre} {item.Nom}(s) pour {total} pièces.");
             }

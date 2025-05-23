@@ -1,24 +1,9 @@
-public class Objet
-{
-    public string Nom { get; set; }
-    public int Quantite { get; set; }
-
-    public Objet(string nom, int quantite)
-    {
-        Nom = nom;
-        Quantite = quantite;
-    }
-
-    public override string ToString()
-    {
-        return $"{Nom} x{Quantite}";
-    }
-}
 
 public class Inventaire
 {
-    public List<Objet> Objets { get; set; } = new List<Objet>();
+    public List<Objet> Objets { get; set; } = new List<Objet>(); // Création d'une liste d'objets
 
+    // Méthode pour ajouter un objet dans l'inventaire
     public void AjouterObjet(string nom, int quantite)
     {
         var objet = Objets.FirstOrDefault(o => o.Nom == nom);
@@ -32,6 +17,7 @@ public class Inventaire
         }
     }
 
+    // Méthode pour retirer un objet de l'inventaire
     public bool UtiliserObjet(string nom, int quantite = 1)
     {
         var objet = Objets.FirstOrDefault(o => o.Nom == nom);
@@ -44,6 +30,7 @@ public class Inventaire
         return false;
     }
 
+    // Méthode pour afficher l'inventaire
     public void Afficher()
     {
         Console.WriteLine("🎒 Inventaire :");
@@ -56,6 +43,7 @@ public class Inventaire
             Console.WriteLine(" - (vide)");
     }
 
+    // Permet de retirer les graines de l'inventaire
     public bool SemerGraine(string nom)
     {
         if (Objets.Any(o => o.Nom == nom && o.Quantite > 0))

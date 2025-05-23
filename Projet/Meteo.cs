@@ -5,6 +5,8 @@ public class Meteo
     public int Humidite { get; set; } = 55;
     public int Vent { get; set; } = 10;
 
+
+    // Méthode pour afficher la météo dans le jeu
     public void Afficher()
     {
         Console.WriteLine(); // Ligne vide pour séparer du jardin
@@ -13,7 +15,6 @@ public class Meteo
         Console.WriteLine($"    T° : {Temperature}°C");
         Console.WriteLine($"    Vent        : {Vent} km/h");
         Console.WriteLine($"    Ciel        : {Condition}\n");
-
     }
 
     public bool Pleut()

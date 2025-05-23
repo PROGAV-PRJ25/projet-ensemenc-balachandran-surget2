@@ -1,186 +1,5 @@
-public class Case
-{
-    public Plantes Plante { get; set; } = default!;
-    public string Afficher()
-    {
-        return Plante == null ? "□" : Plante.Croissance;
-    }
-}
 
-
-public enum TypeTerrain
-{
-    Sable,
-    Terre,
-    Argile
-}
-
-
-
-
-public class Terrain
-{
-    public TypeTerrain Type { get; }
-    public Case[,] Cases { get; }
-    public Terrain(TypeTerrain type)
-    {
-        Type = type;
-        Cases = new Case[3, 3];
-        for (int i = 0; i < 3; i++)
-            for (int j = 0; j < 3; j++)
-                Cases[i, j] = new Case();
-    }
-}
-
-
-public class Jardin
-{
-    public Terrain[,] Terrains { get; }
-    public Meteo meteo;
-    public Jardin(Meteo meteo)
-    {
-        this.meteo = meteo;
-        // Prépare la liste 2× de chaque type
-        var types = new List<TypeTerrain>
-        {
-            TypeTerrain.Sable, TypeTerrain.Sable,
-            TypeTerrain.Terre, TypeTerrain.Terre,
-            TypeTerrain.Argile, TypeTerrain.Argile
-        };
-        // Mélange aléatoirement pour varier la disposition
-        var rnd = new Random();
-        types = types.OrderBy(x => rnd.Next()).ToList();
-
-        Terrains = new Terrain[2, 3];
-        int idx = 0;
-        for (int i = 0; i < 2; i++)
-        {
-            for (int j = 0; j < 3; j++)
-            {
-                Terrains[i, j] = new Terrain(types[idx++]);
-            }
-        }
-    }
-
-    public void ToutPousser(Meteo meteo, string saison, int jours = 1)
-    {
-        foreach (var terrain in Terrains)
-        {
-            foreach (var c in terrain.Cases)
-            {
-                if (c.Plante != null)
-                {
-                    c.Plante.Grandir(meteo, saison, terrain.Type, jours);
-                }
-            }
-        }
-    }
-
-    public List<Plantes> ObtenirToutesLesPlantes()
-    {
-        var plantes = new List<Plantes>();
-
-        foreach (var terrain in Terrains)
-        {
-            foreach (var c in terrain.Cases)
-            {
-                if (c.Plante != null && !plantes.Contains(c.Plante))
-                {
-                    plantes.Add(c.Plante);
-                }
-            }
-        }
-
-        return plantes;
-    }
-
-
-    public Dictionary<string, int> InventaireRecoltes(Inventaire inventaire)
-    {
-        var recoltes = new Dictionary<string, int>();
-        var plantesDejaRecoltees = new HashSet<Plantes>();
-
-        foreach (var terrain in Terrains)
-        {
-            int largeur = terrain.Cases.GetLength(1);
-            int hauteur = terrain.Cases.GetLength(0);
-
-            for (int y = 0; y < hauteur; y++)
-                for (int x = 0; x < largeur; x++)
-                {
-                    var plante = terrain.Cases[y, x].Plante;
-                    if (plante == null || !plante.EstMature || plantesDejaRecoltees.Contains(plante))
-                        continue;
-
-                    // On ne récolte qu'à partir de l'origine de la plante
-                    bool estOrigine = true;
-                    foreach (var (dx, dy) in plante.Occupation)
-                    {
-                        int cx = x + dx, cy = y + dy;
-                        if (cx < 0 || cx >= largeur
-                        || cy < 0 || cy >= hauteur
-                        || terrain.Cases[cy, cx].Plante != plante)
-                        {
-                            estOrigine = false;
-                            break;
-                        }
-                    }
-                    if (!estOrigine)
-                        continue;
-
-                    // -- Récolte --
-                    string key = plante.GetType().Name.ToLower();
-                    int qte = plante.Occupation.Count;
-
-                    inventaire.AjouterObjet(key, qte);
-                    if (recoltes.ContainsKey(key))
-                        recoltes[key] += qte;
-                    else
-                        recoltes[key] = qte;
-
-                    plantesDejaRecoltees.Add(plante);
-
-                    // -- Gestion de la repousse / disparition --
-                    bool repousse = plante.Recolter();
-                    if (!repousse)
-                    {
-                        // Supprimer définitivement: on efface toutes les cases occupées
-                        foreach (var (dx, dy) in plante.Occupation)
-                        {
-                            int cx = x + dx, cy = y + dy;
-                            terrain.Cases[cy, cx].Plante = null!;
-                        }
-                    }
-                    // sinon la plante reste, dans sa nouvelle phase « En croissance »
-                }
-        }
-
-        return recoltes;
-    }
-    
-        public void NettoyerPlantesMortes()
-    {
-        foreach (var terrain in Terrains)
-        {
-            int h = terrain.Cases.GetLength(0), w = terrain.Cases.GetLength(1);
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    var c = terrain.Cases[y, x];
-                    if (c.Plante != null && c.Plante.Phase == "Morte")
-                    {
-                        c.Plante = null!;
-                    }
-                }
-            }
-        }
-    }
-
-}
-
-
-
+// Permet le déplacement du curseur
 public class JardinCurseur
 {
     public Jardin jardin;
@@ -256,6 +75,7 @@ public class JardinCurseur
         Console.ResetColor();
     }
 
+    // Méthode pour naviguer dans le jardin avec les flèches
     public void Deplacer(bool instructions = false, Plantes? plante = null)
     {
         BoucleDeplacement(() =>
@@ -274,6 +94,7 @@ public class JardinCurseur
                     _ => ""
                 };
 
+                // Affichage d'une explication en fonction de la plante choisie
                 if (!string.IsNullOrWhiteSpace(message))
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
@@ -288,6 +109,7 @@ public class JardinCurseur
         ConsoleKey.Enter);
     }
 
+    // Méthode pour déplacer le curseur (gérer les changements de terrains etc...)
     public void DeplacerUneFois(ConsoleKey key)
     {
         switch (key)
@@ -311,14 +133,13 @@ public class JardinCurseur
         }
     }
 
+    // Méthode pour mettre à jour l'affichage du potager
     private void BoucleDeplacement(Action afficher, ConsoleKey toucheQuitter)
     {
         bool enDeplacement = true;
-
         while (enDeplacement)
         {
             afficher();
-
             var keyInfo = Console.ReadKey(true);
 
             switch (keyInfo.Key)
@@ -378,7 +199,7 @@ public class JardinCurseur
         }
     }
 
-
+    // Méthode pour afficher tout le jardin en console avec le curseur
     public void Afficher()
     {
         int nbTerrainsX = jardin.Terrains.GetLength(0);
@@ -428,6 +249,7 @@ public class JardinCurseur
         }
     }
 
+
     private string FormatCellule(string contenu)
     {
         if (contenu.Length == 1)
@@ -438,11 +260,15 @@ public class JardinCurseur
             return contenu.PadRight(4); // Sécurité pour les croissances personnalisées
     }
 
+
+    // Méthode pour obtenir les coordonnées de la case
     public Case ObtenirCase()
     {
         return jardin.Terrains[terrainX, terrainY].Cases[caseY, caseX];
     }
 
+
+    // Méthode pour obtenir la plante sur une certaine position
     public Plantes? ObtenirPlante()
     {
         Case caseActuelle = this.ObtenirCase();
