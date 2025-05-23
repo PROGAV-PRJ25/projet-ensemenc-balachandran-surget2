@@ -1,4 +1,4 @@
-using System.Threading; // en haut de ton fichier si pas déjà fait
+using System.Threading;
 
 public class Urgence
 {
@@ -44,13 +44,13 @@ public class Urgence
 
         _curseur.Afficher();
         Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine("Un éléphant a réussi à rentrer sur votre propriété");
-        Console.WriteLine("Il va écraser certains de vos plants !! Voulez vous lui faire peur et ainsi sauvez vos plants ??");
-        Console.WriteLine("(Si oui vous prenez le risque qu'il s'énerve et écrase TOUTES vos plantations !)\n");
+        Console.WriteLine("Des éléphants ont réussi à entrer sur votre propriété");
+        Console.WriteLine("Ils vont écraser certains de vos plants !! Voulez vous lui faire peur et ainsi sauvez vos plants ??");
+        Console.WriteLine("(Si oui vous prenez le risque qu'ils s'énervent et écrasent TOUTES vos plantations !)\n");
         Console.ResetColor();
         Console.Write("Choix (oui/non): ");
 
-        string reponse = Console.ReadLine()?.Trim().ToLower();
+        string reponse = Console.ReadLine()!.Trim().ToLower();
 
         Random rnd = new Random();
         int nombreAleatoire = rnd.Next(1, 3);
@@ -62,7 +62,7 @@ public class Urgence
                 Console.Clear();
                 _curseur.Afficher();
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("\nL'éléphant a pris peur et s'est enfui ! Toutes vos plantes sont sauves 🐘💨");
+                Console.WriteLine("\nLes éléphants ont pris peur et se sont enfuis ! Toutes vos plantes sont sauves 🐘💨");
                 Console.ResetColor();
 
             }
@@ -71,7 +71,7 @@ public class Urgence
                 Console.Clear();
                 AnimationElephant(_jardin);
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("\nL'éléphant s'est énervé ! Il a tout piétiné ");
+                Console.WriteLine("\nLes éléphant se sont énervés ! Ils ont tout piétiné ");
                 Console.ResetColor();
 
             }
@@ -108,7 +108,7 @@ public class Urgence
 
             _curseur.Afficher();
             Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine("\nL'éléphant s'est baladé... certaines plantes ont été écrasées 🐘💥");
+            Console.WriteLine("\nLes éléphants se sont baladés... certaines plantes ont été écrasées 🐘💥");
             Console.ResetColor();
         }
         else

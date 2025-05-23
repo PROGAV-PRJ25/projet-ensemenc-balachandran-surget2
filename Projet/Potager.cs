@@ -7,19 +7,28 @@ public class Case
         return Plante == null ? "□" : Plante.Croissance;
     }
 }
+public enum TypeTerrain
+{
+    Sable,
+    Terre,
+    Argile
+}
 
 public class Terrain
 {
+    public TypeTerrain Type { get; }
     public Case[,] Cases { get; }
 
-    public Terrain()
+    public Terrain(TypeTerrain type)
     {
+        Type  = type;
         Cases = new Case[3, 3];
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
                 Cases[i, j] = new Case();
     }
 }
+
 
 public class Jardin
 {
@@ -29,10 +38,26 @@ public class Jardin
     public Jardin(Meteo meteo)
     {
         this.meteo = meteo;
+        // Prépare la liste 2× de chaque type
+        var types = new List<TypeTerrain>
+        {
+            TypeTerrain.Sable, TypeTerrain.Sable,
+            TypeTerrain.Terre, TypeTerrain.Terre,
+            TypeTerrain.Argile, TypeTerrain.Argile
+        };
+        // Mélange aléatoirement pour varier la disposition
+        var rnd = new Random();
+        types = types.OrderBy(x => rnd.Next()).ToList();
+
         Terrains = new Terrain[2, 3];
+        int idx = 0;
         for (int i = 0; i < 2; i++)
+        {
             for (int j = 0; j < 3; j++)
-                Terrains[i, j] = new Terrain();
+            {
+                Terrains[i, j] = new Terrain(types[idx++]);
+            }
+        }
     }
 
     public void ToutPousser(int jours = 1)
@@ -298,17 +323,29 @@ public class JardinCurseur
             {
                 for (int ty = 0; ty < nbTerrainsY; ty++)
                 {
+                    var terrain = jardin.Terrains[tx, ty];
+                    ConsoleColor bg = terrain.Type switch
+                {
+                    TypeTerrain.Sable  => ConsoleColor.DarkYellow,
+                    TypeTerrain.Terre  => ConsoleColor.DarkGreen,
+                    TypeTerrain.Argile => ConsoleColor.DarkGray,
+                    _                   => ConsoleColor.Black
+                };
                     for (int col = 0; col < 3; col++)
                     {
-                        bool estCurseur = (tx == terrainX && ty == terrainY && row == caseY && col == caseX);
+                        bool estCurseur = tx == terrainX && ty == terrainY && row == caseY && col == caseX;
                         var caseActuelle = jardin.Terrains[tx, ty].Cases[row, col];
                         string symbole = caseActuelle.Plante?.Croissance ?? "□";
 
                         if (estCurseur)
-                            Console.BackgroundColor = ConsoleColor.DarkGray;
+                            Console.BackgroundColor = ConsoleColor.Gray;
+                        else
+                            Console.BackgroundColor = bg;
 
                         if (caseActuelle.Plante != null)
                             Console.ForegroundColor = caseActuelle.Plante.Couleur;
+                        else
+                            Console.ForegroundColor = ConsoleColor.Black;
 
                         Console.Write(FormatCellule(symbole));
                         Console.ResetColor();
