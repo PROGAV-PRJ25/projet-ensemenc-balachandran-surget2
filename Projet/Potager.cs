@@ -1,12 +1,13 @@
 public class Case
 {
     public Plantes Plante { get; set; } = default!;
-
     public string Afficher()
     {
         return Plante == null ? "□" : Plante.Croissance;
     }
 }
+
+
 public enum TypeTerrain
 {
     Sable,
@@ -14,14 +15,16 @@ public enum TypeTerrain
     Argile
 }
 
+
+
+
 public class Terrain
 {
     public TypeTerrain Type { get; }
     public Case[,] Cases { get; }
-
     public Terrain(TypeTerrain type)
     {
-        Type  = type;
+        Type = type;
         Cases = new Case[3, 3];
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
@@ -34,7 +37,6 @@ public class Jardin
 {
     public Terrain[,] Terrains { get; }
     public Meteo meteo;
-
     public Jardin(Meteo meteo)
     {
         this.meteo = meteo;
@@ -158,6 +160,8 @@ public class Jardin
 
 }
 
+
+
 public class JardinCurseur
 {
     public Jardin jardin;
@@ -176,64 +180,64 @@ public class JardinCurseur
     }
 
     public void AfficherInfosSousCurseur()
+    {
+        var plante = ObtenirPlante();
+        Console.WriteLine(); // ligne vide pour séparer du potager
+
+        if (plante == null)
         {
-            var plante = ObtenirPlante();
-            Console.WriteLine(); // ligne vide pour séparer du potager
-
-            if (plante == null)
-            {
-                Console.WriteLine("Aucune plante ici. Déplacez le curseur pour en voir les infos.");
-                return;
-            }
-
-            // Nom et phase
-            Console.WriteLine($"📋 Plante : {plante.Nom} — Phase : {plante.Phase}");
-
-            // Hydratation
-            Console.Write($"    Hydratation : {plante.NiveauHydratation} / {plante.EauHebdomadaire}  ");
-            if (plante.NiveauHydratation < plante.EauHebdomadaire)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("➤ Plus d'eau nécessaire");
-            }
-            else if (plante.NiveauHydratation > plante.EauHebdomadaire * 2)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("➤ Trop d'eau, attention !");
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("➤ Hydratation correcte");
-            }
-            Console.ResetColor();
-
-            // Température idéale vs actuelle
-            int tMin = plante.TemperaturePreferee.min;
-            int tMax = plante.TemperaturePreferee.max;
-            Console.WriteLine($"    Température idéale : {tMin}°C – {tMax}°C");
-
-            int tempAct = jardin.meteo.Temperature;
-            Console.Write($"    Température actuelle : {tempAct}°C  ");
-            if (tempAct < tMin)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("➤ Trop froid !");
-            }
-            else if (tempAct > tMax)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("➤ Trop chaud !");
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("➤ Parfait");
-            }
-            Console.ResetColor();
+            Console.WriteLine("Aucune plante ici. Déplacez le curseur pour en voir les infos.");
+            return;
         }
 
-    public void Deplacer(bool instructions = false,  Plantes? plante = null)
+        // Nom et phase
+        Console.WriteLine($"📋 Plante : {plante.Nom} — Phase : {plante.Phase}");
+
+        // Hydratation
+        Console.Write($"    Hydratation : {plante.NiveauHydratation} / {plante.EauHebdomadaire}  ");
+        if (plante.NiveauHydratation < plante.EauHebdomadaire)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("➤ Plus d'eau nécessaire");
+        }
+        else if (plante.NiveauHydratation > plante.EauHebdomadaire * 2)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("➤ Trop d'eau, attention !");
+        }
+        else
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("➤ Hydratation correcte");
+        }
+        Console.ResetColor();
+
+        // Température idéale vs actuelle
+        int tMin = plante.TemperaturePreferee.min;
+        int tMax = plante.TemperaturePreferee.max;
+        Console.WriteLine($"    Température idéale : {tMin}°C – {tMax}°C");
+
+        int tempAct = jardin.meteo.Temperature;
+        Console.Write($"    Température actuelle : {tempAct}°C  ");
+        if (tempAct < tMin)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("➤ Trop froid !");
+        }
+        else if (tempAct > tMax)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("➤ Trop chaud !");
+        }
+        else
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("➤ Parfait");
+        }
+        Console.ResetColor();
+    }
+
+    public void Deplacer(bool instructions = false, Plantes? plante = null)
     {
         BoucleDeplacement(() =>
         {
@@ -265,7 +269,7 @@ public class JardinCurseur
         ConsoleKey.Enter);
     }
 
-        public void DeplacerUneFois(ConsoleKey key)
+    public void DeplacerUneFois(ConsoleKey key)
     {
         switch (key)
         {
@@ -369,12 +373,12 @@ public class JardinCurseur
                 {
                     var terrain = jardin.Terrains[tx, ty];
                     ConsoleColor bg = terrain.Type switch
-                {
-                    TypeTerrain.Sable  => ConsoleColor.DarkYellow,
-                    TypeTerrain.Terre  => ConsoleColor.DarkGreen,
-                    TypeTerrain.Argile => ConsoleColor.DarkGray,
-                    _                   => ConsoleColor.Black
-                };
+                    {
+                        TypeTerrain.Sable => ConsoleColor.DarkYellow,
+                        TypeTerrain.Terre => ConsoleColor.DarkGreen,
+                        TypeTerrain.Argile => ConsoleColor.DarkGray,
+                        _ => ConsoleColor.Black
+                    };
                     for (int col = 0; col < 3; col++)
                     {
                         bool estCurseur = tx == terrainX && ty == terrainY && row == caseY && col == caseX;
