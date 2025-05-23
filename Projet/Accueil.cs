@@ -290,7 +290,7 @@ public class Accueil
                     case ConsoleKey.D4:
                                 Console.WriteLine("Passage à la semaine suivante...");
                                 Thread.Sleep(1000);
-                                jardin.ToutPousser(meteo, 7);
+                                jardin.ToutPousser(meteo, saison, 7);
                                 // Baisser l'hydratation de toutes les plantes de 20
                                 BaisserHydratationPlantes(jardin);
 

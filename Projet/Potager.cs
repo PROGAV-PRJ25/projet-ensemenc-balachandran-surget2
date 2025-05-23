@@ -60,7 +60,7 @@ public class Jardin
         }
     }
 
-    public void ToutPousser(Meteo meteo, int jours = 1)
+    public void ToutPousser(Meteo meteo, string saison, int jours = 1)
     {
             foreach (var terrain in Terrains)
             {
@@ -68,7 +68,7 @@ public class Jardin
                 {
                     if (c.Plante != null)
                     {
-                        c.Plante.Grandir(meteo, jours);
+                        c.Plante.Grandir(meteo, saison, terrain.Type, jours);
                     }
                 }
             }

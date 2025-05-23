@@ -58,10 +58,12 @@ public abstract class Plantes
     }
 
     // Croissance gérée ici pour toutes les plantes
-    public void Grandir(Meteo meteo, int jours)
+public void Grandir(Meteo meteo, string saison, TypeTerrain terrainCourant, int jours)
+{
+    if (Phase == "Morte") 
     {
-        if (Phase == "Morte")
-            return;
+        return;
+    }
 
         // Vérif. des températures extrêmes
         if (meteo.Temperature < TemperaturePreferee.min - 5 || meteo.Temperature > TemperaturePreferee.max + 5)
@@ -74,22 +76,32 @@ public abstract class Plantes
             return;
         }
 
-        // Facteur pluie
-        int facteurPluie = meteo.Condition.Equals("Pluie", StringComparison.OrdinalIgnoreCase) ? 2 : 1;
+    //  saison
+        float facteurSaison = SaisonsDeSemis
+        .Contains(saison, StringComparer.OrdinalIgnoreCase)
+        ? 1.2f    // +20 % si bon moment de semis
+        : 0.8f;   // –20 % sinon
 
-        // Croissance cumulée
-        int croissanceTotale = jours * facteurPluie;
-        JoursDepuisSemis += croissanceTotale;
+    // terrain
+    float facteurTerrain = string.Equals(
+            TerrainPrefere, 
+            terrainCourant.ToString(), 
+            StringComparison.OrdinalIgnoreCase)
+        ? 1.2f    // +20 % sur sol préféré
+        : 0.9f;   // –10 % sinon
 
-        // Phases
-        if (JoursDepuisSemis >= EsperanceDeVie) Phase = "Morte";
-        else if (JoursDepuisSemis >= JoursPourMaturité) Phase = "Mature";
-        else if (JoursDepuisSemis >= JoursPourMaturité * 2 / 3) Phase = "En croissance";
-        else if (JoursDepuisSemis >= JoursPourMaturité / 3) Phase = "Jeune pousse";
-        else Phase = "Graine";
+    // croissance
+    float croissanceBrute = jours * facteurSaison * facteurTerrain;
+    int croissanceTotale = Math.Max(0, (int)Math.Round(croissanceBrute));
+    JoursDepuisSemis += croissanceTotale;
 
-    }
-
+    // Phases
+    if      (JoursDepuisSemis >= EsperanceDeVie)                 Phase = "Morte";
+    else if (JoursDepuisSemis >= JoursPourMaturité)               Phase = "Mature";
+    else if (JoursDepuisSemis >= JoursPourMaturité * 2 / 3)     Phase = "En croissance";
+    else if (JoursDepuisSemis >= JoursPourMaturité / 3)           Phase = "Jeune pousse";
+    else                                                          Phase = "Graine";
+}
 
     public void Arroser()
     {
