@@ -35,21 +35,18 @@ public class Jardin
                 Terrains[i, j] = new Terrain();
     }
 
-    public void ToutPousser(int nbJours = 1)
+    public void ToutPousser(int jours = 1)
     {
-        for (int jour = 0; jour < nbJours; jour++)
-        {
             foreach (var terrain in Terrains)
             {
                 foreach (var c in terrain.Cases)
                 {
                     if (c.Plante != null)
                     {
-                        c.Plante.Grandir(meteo);
+                        c.Plante.Grandir(meteo, jours);
                     }
                 }
             }
-        }
     }
 
     public List<Plantes> ObtenirToutesLesPlantes()
@@ -176,7 +173,6 @@ public class JardinCurseur
             {
                 Console.WriteLine($"Plante : {plante.GetType().Name}");
                 Console.WriteLine($"Phase : {plante.Phase}");
-                Console.WriteLine($"Phase actuelle : {plante.PhaseActuelle} / {plante.NombrePhases}");
                 // Niveau d'hydratation
                 Console.WriteLine($"Hydratation : {plante.NiveauHydratation} / {plante.EauHebdomadaire}");
 

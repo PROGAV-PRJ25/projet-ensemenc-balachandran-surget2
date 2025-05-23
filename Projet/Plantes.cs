@@ -52,64 +52,47 @@ public abstract class Plantes
     }
 
     // Croissance gérée ici pour toutes les plantes
-    public void Grandir(Meteo meteo)
-    {
-        if (Phase == "Morte") return;
+    public void Grandir(Meteo meteo, int jours)
+{
+  if (Phase == "Morte") return;
 
-        int joursACroissance = 1;
+  // 1) Vérif. température extrême
+  if (meteo.Temperature < TemperaturePreferee.min - 5
+   || meteo.Temperature > TemperaturePreferee.max + 5)
+    return;
 
-        // Vérification température : si en dehors des bornes préférées, pas de croissance
-        if (meteo.Temperature < TemperaturePreferee.min - 5 || meteo.Temperature > TemperaturePreferee.max + 5)
-        {
-            // Pas de croissance car température vraiment trop extrême
-            return;
-        }
-        else if (meteo.Temperature > TemperaturePreferee.min || meteo.Temperature < TemperaturePreferee.max)
-        {
-            joursACroissance = 1; // croissance lente mais possible
-        }
+  // 2) Hydratation OK ?
+  if (NiveauHydratation < EauHebdomadaire
+   || NiveauHydratation > EauHebdomadaire * 2)
+  {
+    // seule exception : si c'est la pluie, on recharge et on pousse quand même
+    if (!meteo.Condition.Equals("Pluie", StringComparison.OrdinalIgnoreCase))
+      return;
+  }
 
-        if (NiveauHydratation < EauHebdomadaire) // On peut considérer EauHebdomadaire comme seuil minimal ici
-        {
-            // Pas assez d'eau, pas de croissance
-            return;
-        }
-        if (NiveauHydratation > EauHebdomadaire * 2) // trop d'eau
-        {
-            // Trop d'eau = stress = pas de croissance
-            return;
-        }
+  // 3) Calcul de la croissance
+  int facteurPluie = meteo.Condition.Equals("Pluie", StringComparison.OrdinalIgnoreCase) ? 2 : 1;
+  int croissanceTotale = jours * facteurPluie;
 
-        for (int i = 0; i < joursACroissance; i++)
-        {
-            JoursDepuisSemis++;
-            if (JoursDepuisSemis >= EsperanceDeVie)
-            {
-                Phase = "Morte";
-            }
-            else if (JoursDepuisSemis >= JoursPourMaturité)
-            {
-                Phase = "Mature";
-                PhaseActuelle = 4;
-            }
-            else if (JoursDepuisSemis >= JoursPourMaturité * 2 / 3)
-            {
-                Phase = "En croissance";
-                PhaseActuelle = 3;
-            }
-            else if (JoursDepuisSemis >= JoursPourMaturité / 3)
-            {
-                Phase = "Jeune pousse";
-                PhaseActuelle = 2;
-            }
-            else
-            {
-                Phase = "Graine";
-                PhaseActuelle = 1;
-            }
-        }
+  // 4) On décrémente l’eau (par ex. 1/7ème du besoin hebdo par jour)
+  NiveauHydratation = Math.Max(0, NiveauHydratation - (EauHebdomadaire * jours / 7));
 
-    }
+  // 5) On applique la croissance
+  JoursDepuisSemis += croissanceTotale;
+
+  // 6) Mise à jour de la phase
+  if      (JoursDepuisSemis >= EsperanceDeVie)                Phase = "Morte";
+  else if (JoursDepuisSemis >= JoursPourMaturité)              Phase = "Mature";
+  else if (JoursDepuisSemis >= JoursPourMaturité*2/3)        Phase = "En croissance";
+  else if (JoursDepuisSemis >= JoursPourMaturité/3)            Phase = "Jeune pousse";
+  else                                                          Phase = "Graine";
+
+  // 7) Si pluie, on recharge un peu l’eau
+  if (meteo.Condition.Equals("Pluie", StringComparison.OrdinalIgnoreCase))
+    NiveauHydratation = Math.Min(NiveauHydratation + 20, EauHebdomadaire*2);
+}
+
+
 
 
     public void Arroser()
