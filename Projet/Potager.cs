@@ -195,12 +195,29 @@ public class JardinCurseur
         ConsoleKey.Escape);
     }
 
-    public void Deplacer()
+    public void Deplacer(bool instructions = false,  string nomPlante = "")
     {
         BoucleDeplacement(() =>
         {
             Console.Clear();
-            Console.WriteLine("Choisissez une case avec les flèches et appuyez sur Entrée.");
+            Console.WriteLine("Choisissez une case avec les flèches et appuyez sur Entrée.\n");
+            if (instructions == true)
+            {
+                var phrases = new Dictionary<string, string>
+                {
+                    { "Mangue", "La mangue a besoin de 9 cases autour d'elle pour grandir." },
+                    { "Aubergine", "L'aubergine occupe un carré de 2x2 cases." },
+                    { "Hibiscus", "L'hibiscus s'étale sur deux cases horizontalement." },
+                    { "Thé", "Le thé prend une rangée de 3 cases." },
+                    { "Tomate", "La tomate ne prend qu'une seule case." }
+                };
+                if (phrases.ContainsKey(nomPlante))
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine($"ℹ️  {phrases[nomPlante]}\n");
+                    Console.ResetColor();
+                }
+            }
             Afficher();
         },
         ConsoleKey.Enter);
