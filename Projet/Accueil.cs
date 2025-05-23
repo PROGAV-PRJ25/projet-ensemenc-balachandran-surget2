@@ -242,6 +242,8 @@ public class Accueil
                                 Console.ResetColor();
                             }
                         }
+                        Console.WriteLine("\nAppuyez sur une touche pour continuer...");
+                        Console.ReadKey(true);
                         break;
 
                     // Arroser
@@ -267,6 +269,8 @@ public class Accueil
                             Console.ResetColor();
 
                         }
+                        Console.WriteLine("\nAppuyez sur une touche pour continuer...");
+                        Console.ReadKey(true);
                         break;
 
                     // Récolter
@@ -290,6 +294,8 @@ public class Accueil
                                 Console.WriteLine($"- {qte} {nomAffiche} ajouté(s) à l'inventaire.");
                             }
                         }
+                        Console.WriteLine("\nAppuyez sur une touche pour continuer...");
+                        Console.ReadKey(true);
                         break;
 
                     // Passer à la semaine suivante
@@ -308,6 +314,8 @@ public class Accueil
                         }
                         semaine++;
                         finTour = true; // Permet de sortir de la boucle et avancer la semaine
+                        Console.WriteLine("\nAppuyez sur une touche pour continuer...");
+                        Console.ReadKey(true);
                         break;
 
                     default:
@@ -343,6 +351,8 @@ public class Accueil
                             Console.WriteLine("\nAction annulée. Retour au jeu.");
                             Thread.Sleep(1000);
                         }
+                        Console.WriteLine("\nAppuyez sur une touche pour continuer...");
+                        Console.ReadKey(true);
                         break;
                 }
 
