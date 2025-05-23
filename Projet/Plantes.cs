@@ -77,9 +77,6 @@ public void Grandir(Meteo meteo, string saison, TypeTerrain terrainCourant, int 
         return;
     }
 
-    // pluie
-        int facteurPluie = meteo.Condition.Equals("Pluie", StringComparison.OrdinalIgnoreCase) ? 2 : 1;
-
     //  saison
         float facteurSaison = SaisonsDeSemis
         .Contains(saison, StringComparer.OrdinalIgnoreCase)
@@ -95,12 +92,9 @@ public void Grandir(Meteo meteo, string saison, TypeTerrain terrainCourant, int 
         : 0.9f;   // –10 % sinon
 
     // croissance
-    float croissanceBrute = jours * facteurPluie * facteurSaison * facteurTerrain;
+    float croissanceBrute = jours * facteurSaison * facteurTerrain;
     int croissanceTotale = Math.Max(0, (int)Math.Round(croissanceBrute));
     JoursDepuisSemis += croissanceTotale;
-
-    // Évaporation
-    NiveauHydratation = Math.Max(0, NiveauHydratation - (EauHebdomadaire * jours / 7));
 
     // Phases
     if      (JoursDepuisSemis >= EsperanceDeVie)                 Phase = "Morte";
