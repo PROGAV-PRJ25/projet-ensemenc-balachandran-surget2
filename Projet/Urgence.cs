@@ -69,7 +69,6 @@ public class Urgence
                 Console.Clear();
                 AnimationElephant(_jardin);
                 ClearAllPlants();
-                _curseur.Afficher();
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("\n🐘💥 Les éléphant se sont énervés ! Ils ont tout piétiné ");
                 Console.ResetColor();

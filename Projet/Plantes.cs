@@ -3,7 +3,6 @@ public abstract class Plantes
     public string Nom { get; set; } = default!;
     public bool Vivacite { get; set; }
     public int CyclesRestants { get; private set; }
-    public bool Comestible { get; set; }
     public string[] SaisonsDeSemis { get; set; } = default!;
     public string TerrainPrefere { get; set; } = default!;
     public abstract List<(int dx, int dy)> Occupation { get; }
@@ -129,7 +128,6 @@ public class Tomate : Plantes
         Nom = "Tomate";
         Couleur = ConsoleColor.Red;
         Vivacite = false;
-        Comestible = true;
         SaisonsDeSemis = new string[] { "Automne" };
         TerrainPrefere = "Terre";
         JoursPourMaturité = 60;
@@ -169,7 +167,6 @@ public class Mangue : Plantes
     {
         Nom = "Mangue";
         Vivacite = true;
-        Comestible = true;
         SaisonsDeSemis = new string[] { "Printemps" };
         TerrainPrefere = "Terre";
         JoursPourMaturité = 180;
@@ -207,7 +204,6 @@ public class Aubergine : Plantes
     {
         Nom = "Aubergine";
         Vivacite = false;
-        Comestible = true;
         SaisonsDeSemis = new string[] { "Automne" };
         TerrainPrefere = "Argile";
         JoursPourMaturité = 70;
@@ -243,7 +239,6 @@ public class The : Plantes
     {
         Nom = "Thé";
         Vivacite = true;
-        Comestible = true;
         SaisonsDeSemis = new string[] { "Été" };
         TerrainPrefere = "Argile";
         JoursPourMaturité = 365;
@@ -278,7 +273,6 @@ public class Hibiscus : Plantes
     {
         Nom = "Hibiscus";
         Vivacite = true;
-        Comestible = false;
         SaisonsDeSemis = new string[] { "Printemps", "Été", "Automne", "Hiver" };
         TerrainPrefere = "Sable";
         JoursPourMaturité = 90;

@@ -211,9 +211,11 @@ public class Accueil
                                     {
                                         int casesNecessaires = planteChoisie.Occupation.Count;
                                         Console.ForegroundColor = ConsoleColor.Red;
-                                        Console.WriteLine($"\n Impossible de planter ici. {planteChoisie.Nom} a besoin de {casesNecessaires} case(s) libres autour de la case centrale.");
+                                        Console.WriteLine($"\nImpossible de planter ici. {planteChoisie.Nom} a besoin de {casesNecessaires} case(s) libres autour de la case centrale.");
                                         Console.ResetColor();
                                         Console.WriteLine("Veuillez choisir un autre emplacement.\n");
+                                        Console.WriteLine("\nAppuyez sur une touche pour continuer...");
+                                        Console.ReadKey(true);
                                         continue;
                                     }
 
@@ -240,6 +242,8 @@ public class Accueil
                                 Console.WriteLine("\n Choix invalide. Essayez à nouveau.");
                                 Console.ReadKey();
                                 Console.ResetColor();
+                                Console.WriteLine("\nAppuyez sur une touche pour continuer...");
+                                Console.ReadKey(true);
                             }
                         }
                         Console.WriteLine("\nAppuyez sur une touche pour continuer...");

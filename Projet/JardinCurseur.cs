@@ -24,7 +24,7 @@ public class JardinCurseur
 
         if (plante == null)
         {
-            Console.WriteLine("Aucune plante ici. Déplacez le curseur pour en voir les infos.");
+            Console.WriteLine("Aucune plante ici.");
             return;
         }
 
@@ -104,7 +104,6 @@ public class JardinCurseur
             }
             Afficher();
             AfficherInfosSousCurseur();
-            Console.WriteLine("\n(Entrée pour confirmer.)");
         },
         ConsoleKey.Enter);
     }
