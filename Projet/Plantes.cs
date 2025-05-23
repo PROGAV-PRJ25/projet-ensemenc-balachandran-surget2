@@ -57,13 +57,11 @@ public abstract class Plantes
   if (Phase == "Morte") return;
 
   // 1) Vérif. température extrême
-  if (meteo.Temperature < TemperaturePreferee.min - 5
-   || meteo.Temperature > TemperaturePreferee.max + 5)
+  if (meteo.Temperature < TemperaturePreferee.min - 5 || meteo.Temperature > TemperaturePreferee.max + 5)
     return;
 
   // 2) Hydratation OK ?
-  if (NiveauHydratation < EauHebdomadaire
-   || NiveauHydratation > EauHebdomadaire * 2)
+  if (NiveauHydratation < EauHebdomadaire || NiveauHydratation > EauHebdomadaire * 2)
   {
     // seule exception : si c'est la pluie, on recharge et on pousse quand même
     if (!meteo.Condition.Equals("Pluie", StringComparison.OrdinalIgnoreCase))
