@@ -107,7 +107,15 @@ public class Boutique
         if (int.TryParse(Console.ReadLine(), out int choix) && choix > 0 && choix <= vendables.Count)
         {
             var item = vendables[choix - 1];
-            int prix = 4;
+            int prix = item.Nom switch
+            {
+                "tomate" => 3,
+                "aubergine" => 4,
+                "mangue" => 8,
+                "hibiscus" => 6,
+                "thé" => 10,
+                _ => 2 // par défaut
+            };
             if (joueur.Inventaire.UtiliserObjet(item.Nom))
             {
                 joueur.AjouterArgent(prix);

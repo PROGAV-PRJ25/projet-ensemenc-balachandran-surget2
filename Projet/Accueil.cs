@@ -13,6 +13,7 @@ public class TextHelper
 
 public class Accueil
 {
+    const int objectifArgent = 100;
     public void AfficherPageAccueil()
     {
         // Affichage du dessin ASCII pour la page d'accueil
@@ -107,6 +108,9 @@ public class Accueil
                 meteo.Afficher();
 
                 Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine($"{joueur.Argent} pièces / {objectifArgent} pièces");
+                Console.ResetColor();
                 Console.WriteLine();
 
                 curseur.Afficher();
@@ -315,6 +319,21 @@ public class Accueil
                             }
                             break;
                 }
+
+                if (joueur.Argent >= objectifArgent)
+                {
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("\n🎉 Félicitations !");
+                    Console.WriteLine("💰 Vous avez atteint 100 pièces !");
+                    Console.WriteLine("🏆 Vous avez gagné !");
+                    Console.ResetColor();
+                    Console.WriteLine("\nAppuyez sur une touche pour revenir à l'accueil...");
+                    Console.ReadKey();
+                    AfficherPageAccueil();
+                    return; // sort de Jouer()
+                }
+                
                 Console.WriteLine("\nAppuie sur une touche pour continuer...");
                 Console.ReadKey();
             }

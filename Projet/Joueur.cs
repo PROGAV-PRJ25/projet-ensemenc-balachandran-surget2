@@ -5,7 +5,7 @@ public class Joueur
 
     public Joueur()
     {
-        Argent = 100; // départ
+        Argent = 0; // départ
         Inventaire = new Inventaire();
     }
 
